@@ -13,18 +13,14 @@
 :root{--bg:#05070d;--card:rgba(14,18,30,.62);--line:rgba(255,255,255,.09);--tx:#f1f5f9;--mu:#8793a8;--p:#6366f1;--s:#a855f7;--a:#22d3ee;--g:#10f0a0;--r:#ff4d6d;--gold:#fbbf24}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:90px}
-body{background:var(--bg);color:var(--tx);font-family:Inter,sans-serif;line-height:1.6;overflow-x:hidden;padding-bottom:36px}
+body{background:radial-gradient(60% 55% at 78% 18%,rgba(99,102,241,.14),transparent 70%),radial-gradient(50% 45% at 10% 90%,rgba(34,211,238,.08),transparent 70%),var(--bg);background-attachment:fixed;color:var(--tx);font-family:Inter,sans-serif;line-height:1.6;overflow-x:hidden;padding-bottom:36px}
 h1,h2,h3{font-family:Sora,sans-serif;line-height:1.15}
 a{color:inherit;text-decoration:none}
 ::selection{background:var(--p);color:#fff}
 #bg{position:fixed;inset:0;z-index:-3}
-.aur{position:fixed;inset:0;z-index:-2;pointer-events:none;overflow:hidden}
-.aur i{position:absolute;width:55vmax;height:55vmax;border-radius:50%;filter:blur(110px);opacity:.28;animation:drift 22s ease-in-out infinite alternate}
-.aur i:nth-child(1){background:var(--p);left:-15%;top:-20%}
-.aur i:nth-child(2){background:var(--a);right:-20%;top:25%;animation-delay:-8s;opacity:.16}
-.aur i:nth-child(3){background:var(--s);left:20%;bottom:-35%;animation-delay:-14s;opacity:.2}
-@keyframes drift{to{transform:translate(8vw,6vh) scale(1.2)}}
 body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.65));}
+body::after{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.07;mix-blend-mode:overlay;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+.hero h1,.lead,.type{text-shadow:0 2px 26px rgba(5,7,13,.95)}
 #bar{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--p),var(--a),var(--g));z-index:2000;box-shadow:0 0 14px var(--a)}
 #loader{position:fixed;inset:0;background:var(--bg);z-index:3000;display:grid;place-items:center;text-align:center;transition:opacity .8s,visibility .8s}
 #loader.done{opacity:0;visibility:hidden}
@@ -157,7 +153,6 @@ footer{text-align:center;color:var(--mu);font-size:.85rem;padding:40px 20px;marg
 <div id="loader"><div><b>KG.</b><small>Opening the markets…</small><u><i></i></u></div></div>
 <div id="bar"></div><div id="cur"></div><div id="ring"></div>
 <canvas id="bg"></canvas>
-<div class="aur"><i></i><i></i><i></i></div>
 
 <nav>
   <a href="#home" class="logo">Krish Gupta</a>
@@ -321,33 +316,52 @@ let ri=0,ci=0,dl=false;const te=$('#type');
  if(dl&&ci===0){dl=false;ri=(ri+1)%roles.length}
  ci+=dl?-1:1;setTimeout(t,dl?35:75)})();
 
-/* ===== BACKDROP: candlesticks + moving average + perspective grid + floating symbols ===== */
-const cv=$('#bg'),cx=cv.getContext('2d');let W,H,mx=-999,my=-999,off=0,sy=0;const CW=16;let cs=[],px=0;
-function mk(){const o=px;px+=(R()-.5)*22-px*.02;const c=px,h=Math.max(o,c)+R()*9,l=Math.min(o,c)-R()*9;return{o,c,h,l}}
-function init(){W=cv.width=innerWidth;H=cv.height=innerHeight;cs=[];px=0;for(let i=0;i<Math.ceil(W/CW)+3;i++)cs.push(mk())}
+/* ===== BACKDROP: live implied-volatility surface (strike x maturity x IV) =====
+   Scroll = market regime (calm -> stressed -> calm). Move mouse = local bump. Click = shock wave. */
+const cv=$('#bg'),cx=cv.getContext('2d');
+let W,H,NX,NT,PX,PY,PK,VV,mx=-999,my=-999,T=0,st=0,yw=-.4,pt=1,near={i:0,j:0,d:1e9,a:0},shocks=[];
+const DPR=Math.min(devicePixelRatio||1,1.5);
+function init(){W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR;cx.setTransform(DPR,0,0,DPR,0,0);
+ const s=W<700;NX=s?24:38;NT=s?16:26;const n=NX*NT;PX=new Float32Array(n);PY=new Float32Array(n);PK=new Float32Array(n);VV=new Float32Array(n)}
 init();addEventListener('resize',init);
-addEventListener('scroll',()=>sy=scrollY);
 addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
-const syms=['₹','$','%','Σ','β','α','€','¥','↗','Δ','σ','£'];
-const fl=Array.from({length:22},()=>({x:R(),y:R(),s:14+R()*26,v:.0001+R()*.0003,t:syms[Math.floor(R()*syms.length)],p:R()*6}));
-let T=0;
-(function draw(){T++;cx.clearRect(0,0,W,H);
- /* floating symbols */
- fl.forEach(f=>{f.y-=f.v;if(f.y<-.1)f.y=1.1;const x=f.x*W+Math.sin(T/120+f.p)*20;cx.font=f.s+'px Sora';cx.fillStyle=`rgba(129,140,248,${.05+.05*Math.sin(T/90+f.p)})`;cx.fillText(f.t,x,f.y*H)});
- /* perspective grid */
- const hz=H*.78;cx.lineWidth=1;
- for(let i=0;i<16;i++){const k=((i+(T*.012)%1)/16),y=hz+(H-hz)*k*k;cx.strokeStyle=`rgba(34,211,238,${.03+.14*k})`;cx.beginPath();cx.moveTo(0,y);cx.lineTo(W,y);cx.stroke()}
- for(let k=-14;k<=14;k++){cx.strokeStyle='rgba(99,102,241,.1)';cx.beginPath();cx.moveTo(W/2+k*34,hz);cx.lineTo(W/2+k*W/9,H);cx.stroke()}
- /* candles */
- off+=.45;if(off>=CW){off-=CW;cs.shift();cs.push(mk())}
- const base=H*.5-sy*.1,sc=1.5;
- cs.forEach((c,i)=>{const x=i*CW-off,up=c.c>=c.o,col=up?'16,240,160':'255,77,109',d=Math.hypot(x-mx,base-c.c*sc-my),a=.13+Math.max(0,1-d/220)*.5;
-  cx.strokeStyle=`rgba(${col},${a})`;cx.fillStyle=`rgba(${col},${a})`;
-  cx.beginPath();cx.moveTo(x+CW/2-1,base-c.h*sc);cx.lineTo(x+CW/2-1,base-c.l*sc);cx.stroke();
-  const t=base-Math.max(c.o,c.c)*sc;cx.fillRect(x+2,t,CW-6,Math.max(2,Math.abs(c.c-c.o)*sc))});
- /* moving average glow */
- cx.save();cx.shadowColor='#22d3ee';cx.shadowBlur=14;cx.strokeStyle='rgba(34,211,238,.55)';cx.lineWidth=2;cx.beginPath();
- cs.forEach((c,i)=>{let s=0,n=0;for(let j=Math.max(0,i-8);j<=i;j++){s+=cs[j].c;n++}const x=i*CW-off+CW/2,y=base-s/n*sc;i?cx.lineTo(x,y):cx.moveTo(x,y)});cx.stroke();cx.restore();
+function V(i,j,tm){const x=i/(NX-1)*2-1,t=j/(NT-1);
+ let v=.16+.09*st+((.10+.22*st)*x*x/(.3+t)-(.06+.1*st)*x/(.45+t))*.5+(.05+.08*st)*(1-t)+.01*Math.sin(x*5+tm*.6)*Math.cos(t*4-tm*.4);
+ for(const s of shocks){const a=(T-s.t)/60,d=Math.hypot(i-s.i,(j-s.j)*1.4);v+=.16*Math.exp(-a*.55)*Math.exp(-d*.05)*Math.sin(d*.85-a*6)}
+ if(near.a>.01){const d2=(i-near.i)**2+(j-near.j)**2;v+=.06*near.a*Math.exp(-d2/9)}
+ return v}
+function hit(x,y){let b={i:0,j:0,d:1e9};for(let j=0;j<NT;j++)for(let i=0;i<NX;i++){const n=j*NX+i,d=Math.hypot(PX[n]-x,PY[n]-y);if(d<b.d)b={i,j,d}}return b}
+addEventListener('pointerdown',e=>{if(e.target.closest('a,button,input'))return;const b=hit(e.clientX,e.clientY);shocks.push({i:b.i,j:b.j,t:T})});
+setInterval(()=>{if(!document.hidden)shocks.push({i:Math.floor(R()*NX),j:Math.floor(R()*NT),t:T})},9000);
+(function draw(){T++;const tm=T/60,de=document.documentElement,p=scrollY/Math.max(1,de.scrollHeight-innerHeight);
+ st+=(Math.sin(p*Math.PI)*.95-st)*.04;
+ yw+=((-.5+p*.55+(mx>-900?(mx/W-.5)*.3:0))-yw)*.05;pt+=((1+(my>-900?(my/H-.5)*.14:0))-pt)*.05;
+ near.a+=((near.d<240?1:0)-near.a)*.08;shocks=shocks.filter(s=>T-s.t<420);
+ cx.clearRect(0,0,W,H);
+ const u=Math.min(W*.62,H*1.05)*.52,X0=W*.5,Y0=H*.66,cyw=Math.cos(yw),syw=Math.sin(yw),cp=Math.cos(pt),sp=Math.sin(pt);let nb={i:0,j:0,d:1e9};
+ for(let j=0;j<NT;j++)for(let i=0;i<NX;i++){const n=j*NX+i,v=V(i,j,tm);VV[n]=v;
+  const x=(i/(NX-1)*2-1)*1.25,z=(j/(NT-1)*2-1)*.95,y=-(v-.15)*1.9;
+  const Xr=x*cyw-z*syw,Z0=x*syw+z*cyw,Yr=y*cp-Z0*sp,Z=y*sp+Z0*cp,k=1/(1+Z*.32);
+  PX[n]=X0+Xr*u*k;PY[n]=Y0+Yr*u*k;PK[n]=k;
+  if(mx>-900){const d=Math.hypot(PX[n]-mx,PY[n]-my);if(d<nb.d)nb={i,j,d}}}
+ near.i=nb.i;near.j=nb.j;near.d=nb.d;
+ cx.lineWidth=1;cx.lineJoin='round';
+ for(let j=NT-2;j>=0;j--)for(let i=0;i<NX-1;i++){const a=j*NX+i,b=a+1,c=a+NX+1,d=a+NX;
+  const v=(VV[a]+VV[b]+VV[c]+VV[d])/4,vn=Math.min(1,Math.max(0,(v-.12)/.5)),h=255-vn*205,k=(PK[a]+PK[c])/2,al=Math.min(.7,Math.max(.1,(k-.72)*1.5));
+  cx.beginPath();cx.moveTo(PX[a],PY[a]);cx.lineTo(PX[b],PY[b]);cx.lineTo(PX[c],PY[c]);cx.lineTo(PX[d],PY[d]);cx.closePath();
+  cx.fillStyle='rgba(5,7,13,.93)';cx.fill();
+  cx.fillStyle=`hsla(${h},85%,55%,${.04+vn*.15})`;cx.fill();
+  cx.strokeStyle=`hsla(${h},90%,64%,${al})`;cx.stroke()}
+ /* axes + HUD */
+ cx.font='10px JetBrains Mono';cx.fillStyle='rgba(148,163,184,.65)';cx.textAlign='center';
+ [[0,'80%'],[.25,'90%'],[.5,'ATM'],[.75,'110%'],[1,'120%']].forEach(([f,l])=>{const n=Math.round(f*(NX-1));cx.fillText(l,PX[n],PY[n]+18)});
+ const fm=Math.round((NX-1)/2);cx.fillText('STRIKE (% OF SPOT)',PX[fm],PY[fm]+36);
+ cx.textAlign='left';[[0,'1M'],[.33,'3M'],[.66,'6M'],[1,'1Y']].forEach(([f,l])=>{const n=Math.round(f*(NT-1))*NX+NX-1;cx.fillText(l,PX[n]+12,PY[n]+3)});
+ const atm=VV[NX+fm]*100,rg=st<.3?['CALM','#10f0a0']:st<.65?['ELEVATED','#fbbf24']:['STRESSED','#ff4d6d'];
+ const hx=24,hy=H-70;cx.fillStyle='rgba(135,147,168,.85)';cx.fillText('IMPLIED VOL SURFACE · SIMULATED',hx,hy);
+ cx.fillStyle='#e2e8f0';cx.font='600 13px JetBrains Mono';cx.fillText('ATM 1M  σ '+atm.toFixed(1)+'%',hx,hy+18);
+ cx.fillStyle=rg[1];cx.fillText('● '+rg[0],hx+150,hy+18);
+ cx.font='10px JetBrains Mono';cx.fillStyle='rgba(135,147,168,.6)';cx.fillText('scroll = regime · hover = bump · click = shock',hx,hy+34);
  requestAnimationFrame(draw)})();
 
 /* ===== HERO CURVE ===== */
