@@ -1,373 +1,341 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Krish Gupta | Interactive Portfolio</title>
-    <!-- Google Fonts & FontAwesome -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        :root {
-            --bg-dark: #0a0c10;
-            --card-bg: rgba(255, 255, 255, 0.03);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --primary: #6366f1;
-            --secondary: #a855f7;
-            --accent: #06b6d4;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            scroll-behavior: smooth;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            overflow-x: hidden;
-        }
-
-        /* Canvas Background */
-        #particles-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 1100px;
-            background: rgba(10, 12, 16, 0.7);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--card-border);
-            border-radius: 50px;
-            padding: 12px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .logo {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.4rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 24px;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: var(--text-main);
-            text-shadow: 0 0 10px rgba(255,255,255,0.5);
-        }
-
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 0 20px;
-            position: relative;
-        }
-
-        .hero-badge {
-            background: rgba(99, 102, 241, 0.1);
-            border: 1px solid var(--primary);
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            color: var(--accent);
-            margin-bottom: 20px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.05); opacity: 1; }
-        }
-
-        .hero h1 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 4rem;
-            line-height: 1.1;
-            margin-bottom: 20px;
-            background: linear-gradient(180deg, #ffffff 0%, #94a3b8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero p {
-            max-width: 600px;
-            color: var(--text-muted);
-            font-size: 1.2rem;
-            margin-bottom: 35px;
-        }
-
-        .cta-btn {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 14px 32px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 600;
-            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
-            transition: 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .cta-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.6);
-        }
-
-        /* Sections Common */
-        section {
-            padding: 100px 20px;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 2.5rem;
-            margin-bottom: 50px;
-            text-align: center;
-        }
-
-        /* Interactive Grid Cards */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 30px;
-            backdrop-filter: blur(10px);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card:hover {
-            transform: translateY(-10px) scale(1.02);
-            border-color: var(--primary);
-        }
-
-        .card i {
-            font-size: 2.5rem;
-            color: var(--accent);
-            margin-bottom: 20px;
-        }
-
-        .card h3 {
-            font-size: 1.4rem;
-            margin-bottom: 10px;
-        }
-
-        .card p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-
-        /* Scroll Reveal Animation */
-        .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: 0.8s ease-out;
-        }
-
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 40px 20px;
-            border-top: 1px solid var(--card-border);
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Krish Gupta | Finance &amp; Markets Portfolio</title>
+<meta name="description" content="Krish Gupta – PGDM (Financial Management) at FIIB Delhi, CFA Level 1 candidate. Equity research, asset management and investment banking.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root{--bg:#07090f;--bg2:#0d1119;--card:rgba(255,255,255,.04);--line:rgba(255,255,255,.09);--tx:#f1f5f9;--mu:#8b98ad;--p:#6366f1;--s:#a855f7;--a:#22d3ee;--g:#34d399;--nav:rgba(7,9,15,.65)}
+[data-theme=light]{--bg:#f6f7fb;--bg2:#eceef6;--card:rgba(255,255,255,.75);--line:rgba(15,23,42,.1);--tx:#0f172a;--mu:#52607a;--nav:rgba(246,247,251,.75)}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{background:var(--bg);color:var(--tx);font-family:Inter,sans-serif;line-height:1.6;overflow-x:hidden;transition:background .4s,color .4s}
+h1,h2,h3{font-family:Sora,sans-serif;line-height:1.15}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--p);color:#fff}
+#bg{position:fixed;inset:0;z-index:-2}
+.glow{position:fixed;width:520px;height:520px;border-radius:50%;pointer-events:none;z-index:-1;background:radial-gradient(circle,rgba(99,102,241,.18),transparent 65%);transform:translate(-50%,-50%);left:50%;top:50%}
+#bar{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--p),var(--a));z-index:2000}
+#loader{position:fixed;inset:0;background:var(--bg);z-index:3000;display:grid;place-items:center;transition:opacity .7s,visibility .7s}
+#loader.done{opacity:0;visibility:hidden}
+#loader span{font:800 2.6rem Sora;background:linear-gradient(135deg,var(--p),var(--a));-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.35}}
+nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);width:92%;max-width:1100px;background:var(--nav);backdrop-filter:blur(16px);border:1px solid var(--line);border-radius:50px;padding:10px 14px 10px 26px;display:flex;justify-content:space-between;align-items:center;z-index:1000}
+.logo{font:800 1.25rem Sora;background:linear-gradient(135deg,var(--p),var(--a));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.links{display:flex;gap:6px;list-style:none;align-items:center}
+.links a{color:var(--mu);font-size:.9rem;padding:7px 14px;border-radius:30px;transition:.3s}
+.links a:hover,.links a.on{color:var(--tx);background:var(--card)}
+.ib{background:none;border:1px solid var(--line);color:var(--tx);width:38px;height:38px;border-radius:50%;cursor:pointer;transition:.3s}
+.ib:hover{border-color:var(--p);transform:rotate(20deg)}
+#burger{display:none}
+section{max-width:1100px;margin:auto;padding:110px 22px 40px}
+.tag{font:500 .8rem 'JetBrains Mono';color:var(--a);letter-spacing:.15em;text-transform:uppercase;margin-bottom:10px}
+.st{font-size:clamp(1.9rem,4vw,2.8rem);margin-bottom:42px}
+.grad{background:linear-gradient(135deg,var(--p),var(--s),var(--a));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero{min-height:100vh;display:grid;grid-template-columns:1.25fr .75fr;gap:40px;align-items:center;padding-top:120px}
+.badge{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--line);background:var(--card);padding:6px 15px;border-radius:30px;font-size:.82rem;color:var(--mu);margin-bottom:22px}
+.badge i{width:8px;height:8px;border-radius:50%;background:var(--g);box-shadow:0 0 0 0 var(--g);animation:ping 1.8s infinite}
+@keyframes ping{70%{box-shadow:0 0 0 10px transparent}}
+.hero h1{font-size:clamp(2.6rem,6.2vw,4.6rem);margin-bottom:18px;letter-spacing:-.02em}
+.type{font:500 1.15rem 'JetBrains Mono';color:var(--a);min-height:1.8em;margin-bottom:16px}
+.type::after{content:"▍";animation:blink 1s infinite}
+.hero p.lead{color:var(--mu);max-width:560px;margin-bottom:30px}
+.btns{display:flex;gap:14px;flex-wrap:wrap}
+.btn{padding:13px 28px;border-radius:30px;font-weight:600;display:inline-flex;gap:10px;align-items:center;transition:.3s;cursor:pointer;border:1px solid var(--line);color:var(--tx);background:var(--card)}
+.btn.pri{background:linear-gradient(135deg,var(--p),var(--s));color:#fff;border:0;box-shadow:0 10px 28px rgba(99,102,241,.4)}
+.btn:hover{transform:translateY(-3px)}
+.orb{position:relative;aspect-ratio:1;max-width:340px;margin:auto;width:100%}
+.orb .ring{position:absolute;inset:0;border-radius:50%;border:1px dashed var(--line);animation:spin 28s linear infinite}
+.orb .ring:nth-child(2){inset:12%;animation-duration:20s;animation-direction:reverse;border-color:rgba(99,102,241,.4)}
+.orb .core{position:absolute;inset:24%;border-radius:50%;display:grid;place-items:center;font:800 3.4rem Sora;color:#fff;background:linear-gradient(135deg,var(--p),var(--s),var(--a));box-shadow:0 0 70px rgba(99,102,241,.55);animation:float 5s ease-in-out infinite}
+.orb .dot{position:absolute;top:-6px;left:50%;width:14px;height:14px;border-radius:50%;background:var(--a);box-shadow:0 0 16px var(--a)}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes float{50%{transform:translateY(-12px)}}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:10px}
+.stat{text-align:center;padding:22px 10px}
+.stat b{font:800 2.2rem Sora;display:block}
+.stat span{color:var(--mu);font-size:.85rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px;backdrop-filter:blur(10px);transition:border-color .3s,box-shadow .3s;transform-style:preserve-3d}
+.card:hover{border-color:var(--p);box-shadow:0 20px 50px rgba(99,102,241,.15)}
+.about{display:grid;grid-template-columns:1.2fr .8fr;gap:24px}
+.about p{color:var(--mu);margin-bottom:14px}
+.about p b{color:var(--tx);font-weight:600}
+.facts{list-style:none}
+.facts li{display:flex;gap:14px;padding:11px 0;border-bottom:1px solid var(--line);font-size:.93rem}
+.facts li:last-child{border:0}
+.facts i{color:var(--a);width:20px;margin-top:4px}
+.facts small{display:block;color:var(--mu)}
+.tl{position:relative;padding-left:34px}
+.tl::before{content:"";position:absolute;left:8px;top:6px;bottom:6px;width:2px;background:linear-gradient(var(--p),var(--a),transparent)}
+.ti{position:relative;margin-bottom:22px}
+.ti::before{content:"";position:absolute;left:-34px;top:26px;width:18px;height:18px;border-radius:50%;background:var(--bg);border:3px solid var(--p);box-shadow:0 0 14px var(--p)}
+.ti .yr{font:500 .8rem 'JetBrains Mono';color:var(--a)}
+.ti h3{font-size:1.2rem;margin:4px 0}
+.ti p{color:var(--mu);font-size:.93rem}
+.sk{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px}
+.sk h3{font-size:1.1rem;margin-bottom:18px;display:flex;gap:10px;align-items:center}
+.sk h3 i{color:var(--a)}
+.bar{margin-bottom:14px;font-size:.88rem}
+.bar div{display:flex;justify-content:space-between;margin-bottom:5px}
+.bar em{font-style:normal;color:var(--mu)}
+.bar span{display:block;height:6px;border-radius:6px;background:var(--line);overflow:hidden}
+.bar span i{display:block;height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,var(--p),var(--a));transition:width 1.4s cubic-bezier(.2,.8,.2,1)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.chips span{font:500 .78rem 'JetBrains Mono';padding:6px 12px;border-radius:20px;border:1px solid var(--line);color:var(--mu);transition:.3s}
+.chips span:hover{color:var(--tx);border-color:var(--a);transform:translateY(-2px)}
+.filters{display:flex;gap:10px;margin:-14px 0 28px;flex-wrap:wrap}
+.f{background:var(--card);border:1px solid var(--line);color:var(--mu);padding:8px 20px;border-radius:30px;cursor:pointer;font:500 .85rem Inter;transition:.3s}
+.f.on,.f:hover{color:#fff;background:linear-gradient(135deg,var(--p),var(--s));border-color:transparent}
+.pg{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:22px}
+.pj{display:flex;flex-direction:column;gap:12px;transition:opacity .4s,transform .4s,border-color .3s}
+.pj.hide{display:none}
+.pj .ic{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-size:1.2rem;color:#fff;background:linear-gradient(135deg,var(--p),var(--s))}
+.pj h3{font-size:1.2rem}
+.pj p{color:var(--mu);font-size:.92rem;flex:1}
+.pj .chips{margin:0}
+.pj .go{color:var(--a);font-size:.88rem;font-weight:600}
+.pj .go i{transition:.3s}
+.pj:hover .go i{transform:translateX(6px)}
+.goals{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+.goals .card{text-align:center}
+.goals i{font-size:2rem;color:var(--a);margin-bottom:14px}
+.goals p{color:var(--mu);font-size:.9rem;margin-top:8px}
+.ct{text-align:center;padding:50px 24px}
+.ct h2{font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:14px}
+.ct p{color:var(--mu);max-width:520px;margin:0 auto 28px}
+.soc{display:flex;gap:14px;justify-content:center;margin-top:28px}
+.soc a{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);transition:.3s}
+.soc a:hover{background:var(--p);color:#fff;transform:translateY(-5px)}
+footer{text-align:center;color:var(--mu);font-size:.85rem;padding:40px 20px;border-top:1px solid var(--line);margin-top:60px}
+.rv{opacity:0;transform:translateY(38px);transition:opacity .9s,transform .9s}
+.rv.in{opacity:1;transform:none}
+#top{position:fixed;right:22px;bottom:22px;opacity:0;pointer-events:none;transition:.3s;z-index:900;background:var(--p);color:#fff;border-color:transparent}
+#top.show{opacity:1;pointer-events:auto}
+@media(max-width:860px){.hero,.about{grid-template-columns:1fr}.orb{max-width:230px;order:-1}.stats{grid-template-columns:repeat(2,1fr)}
+#burger{display:block}.links{position:absolute;top:64px;left:0;right:0;flex-direction:column;background:var(--bg2);border:1px solid var(--line);border-radius:22px;padding:14px;display:none}.links.open{display:flex}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+</style>
 </head>
 <body>
+<div id="loader"><span>KG.</span></div>
+<div id="bar"></div>
+<canvas id="bg"></canvas>
+<div class="glow" id="glow"></div>
 
-    <canvas id="particles-canvas"></canvas>
+<nav>
+  <a href="#home" class="logo">Krish Gupta</a>
+  <ul class="links" id="links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#journey">Journey</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div style="display:flex;gap:8px">
+    <button class="ib" id="theme" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
+    <button class="ib" id="burger" aria-label="Menu"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>
 
-    <nav>
-        <div class="logo">Krish Gupta</div>
-        <ul class="nav-links">
-            <li><a href="#about">About</a></li>
-            <li><a href="#skills">Skills</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-    </nav>
+<main>
+<section id="home" class="hero">
+  <div>
+    <div class="badge"><i></i> Open to internships &amp; summer opportunities</div>
+    <h1>Hi, I’m <span class="grad">Krish Gupta</span></h1>
+    <div class="type" id="type"></div>
+    <p class="lead">PGDM (Financial Management) student at FIIB Delhi and CFA Level 1 candidate. I like turning annual reports, market data and messy numbers into clear investment views.</p>
+    <div class="btns">
+      <a href="#projects" class="btn pri">View my work <i class="fas fa-arrow-right"></i></a>
+      <a href="#contact" class="btn"><i class="fas fa-paper-plane"></i> Let’s talk</a>
+    </div>
+  </div>
+  <div class="orb" aria-hidden="true">
+    <div class="ring"><div class="dot"></div></div><div class="ring"><div class="dot" style="background:var(--s);box-shadow:0 0 16px var(--s)"></div></div>
+    <div class="core">KG</div>
+  </div>
+</section>
 
-    <section class="hero">
-        <div class="hero-badge">Available for Opportunities</div>
-        <h1>Building Digital Experiences with Precision</h1>
-        <p>Management & Business Professional passionate about leadership, strategy, and innovative digital solutions.</p>
-        <a href="#projects" class="cta-btn">Explore Work <i class="fas fa-arrow-right"></i></a>
-    </section>
+<section style="padding-top:0">
+  <div class="stats rv">
+    <div class="card stat"><b data-n="6" data-s="+">0</b><span>Projects &amp; studies</span></div>
+    <div class="card stat"><b data-n="2">0</b><span>Internships</span></div>
+    <div class="card stat"><b data-n="3">0</b><span>Career tracks</span></div>
+    <div class="card stat"><b data-n="1" data-p="CFA L">0</b><span>Exam in progress</span></div>
+  </div>
+</section>
 
-    <section id="about" class="reveal">
-        <h2 class="section-title">About Me</h2>
-        <div class="card">
-            <h3>Hi, I'm Krish Gupta</h3>
-            <p>I focus on combining strategic business management with digital innovation. Passionate about problem-solving, project leadership, and delivering impactful outcomes.</p>
-        </div>
-    </section>
+<section id="about" class="rv">
+  <div class="tag">// about</div>
+  <h2 class="st">Numbers first, <span class="grad">story second.</span></h2>
+  <div class="about">
+    <div class="card">
+      <p>I’m a finance student who enjoys <b>equity research, valuation and financial modelling</b>. My work usually starts with a company’s annual report or a raw market dataset and ends with a clear, defendable view.</p>
+      <p>I did my <b>B.Com at Amity University (2025)</b> and I’m now doing my <b>PGDM in Financial Management at FIIB Delhi (2026–28)</b>. Alongside the course I’m preparing for <b>CFA Level 1</b>.</p>
+      <p>Outside finance I build small web tools, like a canteen ordering app and a voting system, because I like making things people actually use.</p>
+    </div>
+    <div class="card">
+      <ul class="facts">
+        <li><i class="fas fa-graduation-cap"></i><div>PGDM (Financial Management)<small>FIIB Delhi · AACSB accredited · 2026–28</small></div></li>
+        <li><i class="fas fa-building-columns"></i><div>B.Com<small>Amity University · 2025</small></div></li>
+        <li><i class="fas fa-award"></i><div>CFA Level 1<small>Candidate</small></div></li>
+        <li><i class="fas fa-location-dot"></i><div>Delhi NCR, India</div></li>
+      </ul>
+    </div>
+  </div>
+</section>
 
-    <section id="skills" class="reveal">
-        <h2 class="section-title">Core Skills</h2>
-        <div class="grid">
-            <div class="card">
-                <i class="fas fa-chart-line"></i>
-                <h3>Strategic Management</h3>
-                <p>Analyzing business dynamics, market research, and leading strategic initiatives.</p>
-            </div>
-            <div class="card">
-                <i class="fas fa-tasks"></i>
-                <h3>Project Leadership</h3>
-                <p>Managing workflows, coordinating teams, and driving operational efficiency.</p>
-            </div>
-            <div class="card">
-                <i class="fas fa-laptop-code"></i>
-                <h3>Digital Solutions</h3>
-                <p>Leveraging modern tech tools and digital strategy to elevate brand presence.</p>
-            </div>
-        </div>
-    </section>
+<section id="journey" class="rv">
+  <div class="tag">// journey</div>
+  <h2 class="st">Education &amp; <span class="grad">experience</span></h2>
+  <div class="tl">
+    <div class="ti card"><span class="yr">2026 — 2028</span><h3>PGDM, Financial Management</h3><p>Fortune Institute of International Business (FIIB), Delhi. Coursework and field studies in production economics, corporate finance, markets and business communication.</p></div>
+    <div class="ti card"><span class="yr">In progress</span><h3>CFA Level 1 Candidate</h3><p>Building a base in ethics, financial reporting, equity and fixed income.</p></div>
+    <div class="ti card"><span class="yr">Internship</span><h3>Paisalo</h3><p>Hands-on exposure to the financial services industry. <em>(Add your role and 1–2 results here.)</em></p></div>
+    <div class="ti card"><span class="yr">Internship</span><h3>Karuna Compassion NGO</h3><p>Worked on the ground with a social-impact organisation. <em>(Add your role and 1–2 results here.)</em></p></div>
+    <div class="ti card"><span class="yr">2022 — 2025</span><h3>B.Com</h3><p>Amity University. Foundation in accounting, commerce and economics.</p></div>
+  </div>
+</section>
 
-    <section id="projects" class="reveal">
-        <h2 class="section-title">Featured Projects</h2>
-        <div class="grid">
-            <div class="card">
-                <i class="fas fa-briefcase"></i>
-                <h3>Business Strategy Analysis</h3>
-                <p>Comprehensive market analysis evaluating growth trends and competitive positioning.</p>
-            </div>
-            <div class="card">
-                <i class="fas fa-globe"></i>
-                <h3>Interactive E-Portfolio</h3>
-                <p>Modern responsive web portfolio showcasing projects, skills, and interactive UI design.</p>
-            </div>
-        </div>
-    </section>
+<section id="skills" class="rv">
+  <div class="tag">// skills</div>
+  <h2 class="st">What I <span class="grad">bring</span></h2>
+  <div class="sk">
+    <div class="card">
+      <h3><i class="fas fa-chart-line"></i> Finance</h3>
+      <div class="bar"><div>Financial Modelling<em>80%</em></div><span><i data-w="80"></i></span></div>
+      <div class="bar"><div>Equity Research &amp; Valuation<em>75%</em></div><span><i data-w="75"></i></span></div>
+      <div class="bar"><div>Ratio &amp; Report Analysis<em>85%</em></div><span><i data-w="85"></i></span></div>
+      <div class="bar"><div>CAPM / Risk Analysis<em>70%</em></div><span><i data-w="70"></i></span></div>
+    </div>
+    <div class="card">
+      <h3><i class="fas fa-code"></i> Tech</h3>
+      <div class="bar"><div>Excel &amp; Data Analysis<em>85%</em></div><span><i data-w="85"></i></span></div>
+      <div class="bar"><div>React / Web Development<em>70%</em></div><span><i data-w="70"></i></span></div>
+      <div class="bar"><div>HTML · CSS · JS<em>75%</em></div><span><i data-w="75"></i></span></div>
+      <div class="chips"><span>React</span><span>Vite</span><span>Tailwind</span><span>Firebase</span><span>Node.js</span></div>
+    </div>
+    <div class="card">
+      <h3><i class="fas fa-comments"></i> Business</h3>
+      <div class="bar"><div>Case Analysis<em>80%</em></div><span><i data-w="80"></i></span></div>
+      <div class="bar"><div>Presentation &amp; Storytelling<em>75%</em></div><span><i data-w="75"></i></span></div>
+      <div class="chips"><span>PESTEL</span><span>Porter’s</span><span>Cobb–Douglas</span><span>Debt Markets</span><span>IPO Analysis</span></div>
+    </div>
+  </div>
+  <p style="color:var(--mu);font-size:.8rem;margin-top:14px">Bars are self-assessed. Edit the percentages in the HTML to match you.</p>
+</section>
 
-    <section id="contact" class="reveal">
-        <h2 class="section-title">Get In Touch</h2>
-        <div class="card" style="text-align: center;">
-            <p>Feel free to reach out for collaborations or opportunities!</p>
-            <br>
-            <a href="mailto:krishgupta@example.com" class="cta-btn"><i class="fas fa-envelope"></i> Send an Email</a>
-        </div>
-    </section>
+<section id="projects" class="rv">
+  <div class="tag">// work</div>
+  <h2 class="st">Selected <span class="grad">projects</span></h2>
+  <div class="filters">
+    <button class="f on" data-f="all">All</button><button class="f" data-f="fin">Finance</button><button class="f" data-f="eco">Economics &amp; Strategy</button><button class="f" data-f="dev">Tech</button>
+  </div>
+  <div class="pg">
+    <article class="card pj" data-c="fin"><div class="ic"><i class="fas fa-file-invoice-dollar"></i></div><h3>ITC Limited – Financial Deep Dive</h3><p>Five-year financials, ratio analysis and red-flag scan from the annual report, plus a CAPM beta study against the Nifty 50.</p><div class="chips"><span>Ratios</span><span>CAPM</span><span>Excel</span></div><a class="go" href="#" >View case <i class="fas fa-arrow-right"></i></a></article>
+    <article class="card pj" data-c="fin"><div class="ic"><i class="fas fa-landmark"></i></div><h3>Indian Corporate Debt Market, FY22–FY26</h3><p>Market size to GDP, primary issuance, secondary trading, FPI flows and a view on private placements and AAA dominance, with sourced data.</p><div class="chips"><span>Fixed Income</span><span>Research</span></div><a class="go" href="#">View study <i class="fas fa-arrow-right"></i></a></article>
+    <article class="card pj" data-c="fin"><div class="ic"><i class="fas fa-rocket"></i></div><h3>India IPO Market Analysis</h3><p>Team workbook and presentation summarising the IPO market in a few clear slides.</p><div class="chips"><span>IPO</span><span>Team project</span></div><a class="go" href="#">View deck <i class="fas fa-arrow-right"></i></a></article>
+    <article class="card pj" data-c="eco"><div class="ic"><i class="fas fa-industry"></i></div><h3>Production Economics Field Study</h3><p>Field study of a customised iron-structures business using the Cobb–Douglas function and returns to scale, with a clear conclusion.</p><div class="chips"><span>Cobb–Douglas</span><span>Field study</span></div><a class="go" href="#">View repo <i class="fas fa-arrow-right"></i></a></article>
+    <article class="card pj" data-c="eco"><div class="ic"><i class="fas fa-chess-knight"></i></div><h3>Business Case Analyses</h3><p>BYJU’S (PESTEL and Porter’s), Snitch operations and Ola Electric board strategy.</p><div class="chips"><span>Strategy</span><span>Operations</span></div><a class="go" href="#">View cases <i class="fas fa-arrow-right"></i></a></article>
+    <article class="card pj" data-c="dev"><div class="ic"><i class="fas fa-qrcode"></i></div><h3>Queueless – Canteen Ordering App</h3><p>Campus canteen app with OTP login, kitchen dashboard, live order tracking and QR-based collection.</p><div class="chips"><span>React</span><span>Firebase</span><span>QR</span></div><a class="go" href="#">View project <i class="fas fa-arrow-right"></i></a></article>
+    <article class="card pj" data-c="dev"><div class="ic"><i class="fas fa-check-to-slot"></i></div><h3>Society E-Voting System</h3><p>Secure election platform for a housing society with real-time results and emailed credentials.</p><div class="chips"><span>React</span><span>Firestore</span><span>EmailJS</span></div><a class="go" href="#">View project <i class="fas fa-arrow-right"></i></a></article>
+    <article class="card pj" data-c="dev eco"><div class="ic"><i class="fas fa-sliders"></i></div><h3>Production Function Explorer</h3><p>Interactive classroom tool to play with inputs and see output, returns to scale and isoquants.</p><div class="chips"><span>HTML</span><span>JS</span><span>Teaching</span></div><a class="go" href="#">Open tool <i class="fas fa-arrow-right"></i></a></article>
+  </div>
+</section>
 
-    <footer>
-        <p>&copy; 2026 Krish Gupta. Hosted on GitHub Pages.</p>
-    </footer>
+<section class="rv">
+  <div class="tag">// direction</div>
+  <h2 class="st">Where I’m <span class="grad">heading</span></h2>
+  <div class="goals">
+    <div class="card"><i class="fas fa-magnifying-glass-chart"></i><h3>Equity Research</h3><p>Deep dives, models and clear recommendations.</p></div>
+    <div class="card"><i class="fas fa-chart-pie"></i><h3>Asset Management</h3><p>Portfolio thinking and risk-adjusted returns.</p></div>
+    <div class="card"><i class="fas fa-handshake"></i><h3>Investment Banking</h3><p>Valuation, deal analysis and storytelling with numbers.</p></div>
+  </div>
+</section>
 
-    <script>
-        // Particle Background Animation
-        const canvas = document.getElementById('particles-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
+<section id="contact" class="rv">
+  <div class="card ct">
+    <div class="tag">// contact</div>
+    <h2>Let’s build something <span class="grad">together</span></h2>
+    <p>Looking for internships and projects in equity research, asset management and investment banking. My inbox is open.</p>
+    <a class="btn pri" href="mailto:YOUR_EMAIL@example.com"><i class="fas fa-envelope"></i> Say hello</a>
+    <div class="soc">
+      <a href="https://www.linkedin.com/in/YOUR-LINKEDIN" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://github.com/YOUR-GITHUB" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+      <a href="mailto:YOUR_EMAIL@example.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+    </div>
+  </div>
+</section>
+</main>
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+<footer>© 2026 Krish Gupta · Designed &amp; built by me · Hosted on GitHub Pages</footer>
+<button class="ib" id="top" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
 
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 1;
-                this.speedX = (Math.random() - 0.5) * 0.5;
-                this.speedY = (Math.random() - 0.5) * 0.5;
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-            }
-            draw() {
-                ctx.fillStyle = 'rgba(99, 102, 241, 0.4)';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
+<script>
+// loader
+window.addEventListener('load',()=>setTimeout(()=>document.getElementById('loader').classList.add('done'),700));
 
-        for (let i = 0; i < 60; i++) particles.push(new Particle());
+// theme
+const root=document.documentElement,tb=document.getElementById('theme');
+const setT=t=>{root.dataset.theme=t;tb.innerHTML=t==='dark'?'<i class="fas fa-moon"></i>':'<i class="fas fa-sun"></i>';try{localStorage.setItem('kg-theme',t)}catch(e){}};
+let saved='dark';try{saved=localStorage.getItem('kg-theme')||'dark'}catch(e){}
+setT(saved);tb.onclick=()=>setT(root.dataset.theme==='dark'?'light':'dark');
 
-        function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                p.update();
-                p.draw();
-            });
-            requestAnimationFrame(animateParticles);
-        }
-        animateParticles();
+// mobile menu
+const links=document.getElementById('links');
+document.getElementById('burger').onclick=()=>links.classList.toggle('open');
+links.querySelectorAll('a').forEach(a=>a.onclick=()=>links.classList.remove('open'));
 
-        // Scroll Reveal Effect
-        const reveals = document.querySelectorAll('.reveal');
-        window.addEventListener('scroll', () => {
-            reveals.forEach(reveal => {
-                const windowHeight = window.innerHeight;
-                const revealTop = reveal.getBoundingClientRect().top;
-                if (revealTop < windowHeight - 100) {
-                    reveal.classList.add('active');
-                }
-            });
-        });
-    </script>
+// typing
+const roles=['Equity Research Aspirant','CFA Level 1 Candidate','Financial Modelling Enthusiast','Builder of Useful Web Tools'];
+let ri=0,ci=0,del=false;const te=document.getElementById('type');
+(function tick(){const w=roles[ri];te.textContent=w.slice(0,ci);
+ if(!del&&ci===w.length){del=true;return setTimeout(tick,1500)}
+ if(del&&ci===0){del=false;ri=(ri+1)%roles.length}
+ ci+=del?-1:1;setTimeout(tick,del?35:75)})();
+
+// particle network
+const cv=document.getElementById('bg'),cx=cv.getContext('2d');let W,H,pts=[],mouse={x:-999,y:-999};
+function size(){W=cv.width=innerWidth;H=cv.height=innerHeight;pts=Array.from({length:Math.min(90,Math.floor(W*H/16000))},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4}))}
+addEventListener('resize',size);size();
+addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;const g=document.getElementById('glow');g.style.left=e.clientX+'px';g.style.top=e.clientY+'px'});
+(function draw(){cx.clearRect(0,0,W,H);const dark=root.dataset.theme==='dark',c=dark?'129,140,248':'79,70,229';
+ pts.forEach((p,i)=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
+  const dx=p.x-mouse.x,dy=p.y-mouse.y,d=Math.hypot(dx,dy);if(d<110){p.x+=dx/d*1.2;p.y+=dy/d*1.2}
+  cx.fillStyle=`rgba(${c},.6)`;cx.beginPath();cx.arc(p.x,p.y,1.6,0,6.3);cx.fill();
+  for(let j=i+1;j<pts.length;j++){const q=pts[j],l=Math.hypot(p.x-q.x,p.y-q.y);if(l<120){cx.strokeStyle=`rgba(${c},${.18*(1-l/120)})`;cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(q.x,q.y);cx.stroke()}}});
+ requestAnimationFrame(draw)})();
+
+// reveal + counters + skill bars
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;e.target.classList.add('in');
+ e.target.querySelectorAll('[data-w]').forEach(b=>b.style.width=b.dataset.w+'%');
+ e.target.querySelectorAll('[data-n]').forEach(n=>{if(n.done)return;n.done=1;const t=+n.dataset.n,s=n.dataset.s||'',p=n.dataset.p||'';let v=0;
+  const st=setInterval(()=>{v+=Math.max(1,t/30);if(v>=t){v=t;clearInterval(st)}n.textContent=p+Math.round(v)+s},40)});
+ io.unobserve(e.target)}),{threshold:.15});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+// project filter
+document.querySelectorAll('.f').forEach(b=>b.onclick=()=>{document.querySelectorAll('.f').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+ document.querySelectorAll('.pj').forEach(c=>c.classList.toggle('hide',b.dataset.f!=='all'&&!c.dataset.c.includes(b.dataset.f)))});
+
+// 3D tilt
+if(matchMedia('(hover:hover)').matches)document.querySelectorAll('.pj,.goals .card,.stat').forEach(c=>{
+ c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+  c.style.transform=`perspective(800px) rotateY(${x*10}deg) rotateX(${-y*10}deg) translateY(-6px)`});
+ c.addEventListener('mouseleave',()=>c.style.transform='')});
+
+// scroll progress, active link, back to top
+const secs=[...document.querySelectorAll('section[id]')],tp=document.getElementById('top');
+addEventListener('scroll',()=>{const h=document.documentElement;
+ document.getElementById('bar').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
+ tp.classList.toggle('show',h.scrollTop>600);
+ let cur='';secs.forEach(s=>{if(h.scrollTop>=s.offsetTop-200)cur=s.id});
+ links.querySelectorAll('a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+cur))});
+tp.onclick=()=>scrollTo({top:0,behavior:'smooth'});
+</script>
 </body>
 </html>
