@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Krish Gupta — Finance &amp; Markets</title>
-<meta name="description" content="Krish Gupta – PGDM (Financial Management) at FIIB Delhi, CFA Level 1 candidate. Equity research, asset management and investment banking.">
+<meta name="description" content="Krish Gupta – PGDM (Financial Management) at FIIB Delhi, CFA Level 1 candidate. Equity research, valuation, and capital markets.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -210,17 +210,77 @@ section{position:relative}
 #cd{fill:var(--acc)}
 
 /* ═══════════════════════════════════════════════════════════
-   ABOUT / MANIFESTO (REPLACED - Clean narrative without duplicate list)
+   ABOUT / PERSPECTIVE WITH PRESENTING PHOTO
    ═══════════════════════════════════════════════════════════ */
 #about{padding:14vh 5vw 8vh}
-.mani-wrap{max-width:1100px;margin:0 auto}
-.mani-kicker{color:var(--acc);margin-bottom:20px;display:inline-block}
-.mani p{font:400 clamp(1.6rem,2.8vw,2.7rem)/1.26 'Instrument Serif',serif;letter-spacing:-.018em;color:var(--ink);margin-bottom:5vh}
+.mani-grid{
+  display:grid;
+  grid-template-columns:1.2fr 0.8fr;
+  gap:5vw;
+  align-items:center;
+  max-width:1250px;
+  margin:0 auto 7vh;
+}
+.mani-kicker{color:var(--acc);margin-bottom:18px;display:inline-block}
+.mani p{font:400 clamp(1.5rem,2.5vw,2.4rem)/1.3 'Instrument Serif',serif;letter-spacing:-.015em;color:var(--ink);margin-bottom:4vh}
 .mani em{color:var(--acc);font-style:italic}
-.mani-highlight{display:flex;gap:40px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:4vh;margin-bottom:6vh}
-.mh-card{flex:1;min-width:220px}
+.mani-highlight{display:flex;gap:30px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:3vh}
+.mh-card{flex:1;min-width:200px}
 .mh-card .mono{color:var(--mute);margin-bottom:8px;display:block}
-.mh-card p{font-size:1.05rem;line-height:1.5;color:var(--ink)}
+.mh-card p{font-size:.98rem;line-height:1.55;color:var(--ink)}
+
+/* Editorial Presentation Photo Frame */
+.mani-photo-col{display:flex;justify-content:center}
+.editorial-frame{
+  position:relative;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:14px;
+  max-width:380px;
+  width:100%;
+  box-shadow:0 30px 60px -20px rgba(0,0,0,.75);
+  cursor:zoom-in;
+  transition:transform .4s cubic-bezier(.2,.8,.2,1), border-color .3s;
+}
+.editorial-frame:hover{
+  transform:translateY(-6px);
+  border-color:rgba(75,214,164,.4);
+}
+.frame-tag{
+  position:absolute;
+  top:24px;
+  left:24px;
+  z-index:2;
+  background:rgba(22,21,21,.85);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.16);
+  padding:6px 14px;
+  border-radius:30px;
+  font-size:.68rem;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:var(--ink);
+}
+.frame-tag .tag-dot{width:6px;height:6px;border-radius:50%;background:var(--acc)}
+.editorial-img{
+  width:100%;
+  aspect-ratio:9/13;
+  object-fit:cover;
+  object-position:center 25%;
+  border-radius:16px;
+  display:block;
+}
+.editorial-frame figcaption{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 6px 4px;
+  font-size:.72rem;
+  color:var(--mute);
+}
+.editorial-frame .zoom-hint{color:var(--acc)}
 
 .mq{overflow:hidden;padding:3vh 0 6vh}
 .mq .row{display:flex;white-space:nowrap;width:max-content;will-change:transform;font:400 clamp(2.2rem,5.4vw,4.6rem)/1.15 'Instrument Serif',serif;letter-spacing:-.02em}
@@ -281,26 +341,6 @@ section{position:relative}
 .mw{padding:8vh 5vw 4vh;max-width:1250px;margin:0 auto}
 .door.lock .leaf{cursor:default}.door.lock .leaf:hover{transform:none}
 .lk2{position:relative;color:rgba(241,236,226,.55);text-align:center;font:500 .7rem 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;line-height:1.6;padding:0 14px}
-
-/* ═══════════════════════════════════════════════════════════
-   VALUATION LAB
-   ═══════════════════════════════════════════════════════════ */
-#lab{padding:12vh 5vw 14vh;max-width:1250px;margin:0 auto}
-.lh{margin-bottom:5vh}
-.lh .mono{color:var(--mute);display:block;margin-bottom:10px}
-.lh h2{font-size:clamp(2rem,3.9vw,3.4rem);line-height:1}
-.lg{display:grid;grid-template-columns:.9fr 1.1fr;gap:6vw}
-.lg label{display:flex;justify-content:space-between;margin:26px 0 10px;color:var(--mute)}
-.lg label b{color:var(--ink);font-weight:500}
-input[type=range]{width:100%;appearance:none;height:1px;background:var(--ink);outline:0}
-input[type=range]::-webkit-slider-thumb{appearance:none;width:22px;height:22px;border-radius:50%;background:var(--acc);border:4px solid var(--paper);box-shadow:0 0 0 1px var(--ink)}
-input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--acc);border:4px solid var(--paper)}
-.big-n{font:400 clamp(3rem,6vw,5rem)/.9 'Instrument Serif',serif;color:var(--acc)}
-.bars{display:flex;align-items:flex-end;gap:10px;height:140px;margin:26px 0 30px}
-.bars div{flex:1;background:var(--ink);transition:height .5s cubic-bezier(.2,.9,.3,1.1);position:relative;min-height:3px}
-.bars div.tv{background:var(--acc)}
-.bars em{position:absolute;bottom:-24px;left:0;right:0;text-align:center;font:400 .66rem 'JetBrains Mono';color:var(--mute);font-style:normal}
-.note{color:var(--mute);font-size:.8rem;margin-top:18px}
 
 /* ═══════════════════════════════════════════════════════════
    CONTACT & FOOTER
@@ -430,6 +470,8 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
   .cutout-img{max-height:55vh}
   .cutout-badge{bottom:15px;right:50%;transform:translateX(50%)}
   .cutout-badge:hover{transform:translateX(50%) translateY(-3px)}
+  .mani-grid{grid-template-columns:1fr}
+  .editorial-frame{max-width:380px;margin:30px auto 0}
   .jv{grid-template-columns:1fr;gap:3vh;align-content:center}
   .jr{min-height:34vh}
   .dh .mono,.top .clk{display:none}
@@ -473,18 +515,17 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 <div id="menu"><div class="mi" data-lenis-prevent>
   <nav>
     <a href="#hero"><i>01</i><span>Home</span></a>
-    <a href="#about"><i>02</i><span>About &amp; Manifesto</span></a>
+    <a href="#about"><i>02</i><span>About &amp; Perspective</span></a>
     <a href="#journey"><i>03</i><span>My story</span></a>
     <a href="#work"><i>04</i><span>Projects &amp; Field Studies</span></a>
-    <a href="#lab"><i>05</i><span>Valuation lab</span></a>
-    <a href="#contact"><i>06</i><span>Contact</span></a>
+    <a href="#contact"><i>05</i><span>Contact</span></a>
   </nav>
   <div class="mf mono"><span>Delhi · <span id="clk2"></span></span><a id="mmail" href="#"></a></div>
 </div></div>
 
 <main>
 <!-- ══════════════════════════════════════════════════════════════
-     HERO SECTION (Featuring Cutout Headshot + Spiral Notepad)
+     01 / HERO SECTION (Featuring Cutout Headshot + Spiral Notepad)
      ══════════════════════════════════════════════════════════════ -->
 <section id="hero" data-bg="#161515" data-idx="01">
   <div class="hero-wrapper">
@@ -522,7 +563,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
       </div>
 
       <p class="hero-sub">
-        PGDM in Financial Management at FIIB Delhi · CFA Level 1 candidate. Turning annual reports, DCF assumptions, and messy market data into clear, defensible views.
+        PGDM in Financial Management at FIIB Delhi · CFA Level 1 candidate. Turning annual reports, DCF valuation frameworks, and messy market data into clear, defensible views.
       </p>
 
       <div class="hero-actions">
@@ -553,30 +594,44 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 </section>
 
 <!-- ══════════════════════════════════════════════════════════════
-     ABOUT / MANIFESTO SECTION (Clean narrative without the duplicate timeline)
+     02 / ABOUT & PERSPECTIVE (With Presentation Photo at FIIB)
      ══════════════════════════════════════════════════════════════ -->
 <section id="about" data-bg="#161515" data-idx="02">
-  <div class="mani-wrap">
-    <span class="mono mani-kicker">02 / Philosophy &amp; Mindset</span>
-    <div class="mani">
-      <p id="mani">
-        I’m a finance postgraduate who loves turning complex annual reports and noisy market data into clear views. I care deeply about <em>intrinsic valuation</em>, capital allocation, and the real story the numbers tell. When I’m not building models in Excel, I study economic moats and build interactive tools that people actually find useful.
-      </p>
+  <div class="mani-grid">
+    <div class="mani-text-col">
+      <span class="mono mani-kicker">02 / Philosophy &amp; Perspective</span>
+      <div class="mani">
+        <p id="mani">
+          I’m a finance postgraduate who loves turning complex annual reports and noisy market data into clear views. I care deeply about <em>intrinsic valuation</em>, capital allocation, and the real story the numbers tell. Grounding quantitative models in real-world economics, company fundamentals, and disciplined research is what drives my work.
+        </p>
+      </div>
+
+      <div class="mani-highlight">
+        <div class="mh-card">
+          <span class="mono">Focus Areas</span>
+          <p>Equity Research, Financial Modelling, Valuation &amp; Capital Markets.</p>
+        </div>
+        <div class="mh-card">
+          <span class="mono">Approach</span>
+          <p>Connecting theoretical finance with ground reality and company fundamentals.</p>
+        </div>
+        <div class="mh-card">
+          <span class="mono">Location</span>
+          <p id="locText">Delhi NCR, India</p>
+        </div>
+      </div>
     </div>
 
-    <div class="mani-highlight">
-      <div class="mh-card">
-        <span class="mono">Focus Area</span>
-        <p>Equity Research, Financial Modelling, DCF Valuation &amp; Capital Markets.</p>
-      </div>
-      <div class="mh-card">
-        <span class="mono">Approach</span>
-        <p>Grounding quantitative assumptions in ground reality, field studies, and unit economics.</p>
-      </div>
-      <div class="mh-card">
-        <span class="mono">Location</span>
-        <p id="locText">Delhi NCR, India</p>
-      </div>
+    <!-- Editorial Presentation Photo Card -->
+    <div class="mani-photo-col">
+      <figure class="editorial-frame" data-lb="img/presenting.jpg" data-cap="Krish Gupta presenting at Fortune Institute of International Business (FIIB), New Delhi">
+        <div class="frame-tag mono"><i class="tag-dot"></i> FIIB Delhi · PGDM-FM</div>
+        <img src="img/presenting.jpg" alt="Krish Gupta presenting at FIIB Delhi" class="editorial-img" loading="lazy">
+        <figcaption class="mono">
+          <span>Speaker &amp; Presenter</span>
+          <span class="zoom-hint">Click to zoom ↗</span>
+        </figcaption>
+      </figure>
     </div>
   </div>
 
@@ -591,7 +646,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 </section>
 
 <!-- ══════════════════════════════════════════════════════════════
-     MY STORY (The comprehensive chronological journey with odometer)
+     03 / MY STORY (Chronological Journey with Odometer)
      ══════════════════════════════════════════════════════════════ -->
 <section id="journey" data-bg="#1d1b1a" data-idx="03">
   <div class="jv">
@@ -616,8 +671,8 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 </section>
 
 <!-- ══════════════════════════════════════════════════════════════
-     WORK — DOORS WALL (Horizontal sliding interactive projects)
-     ═══════════════════════════════════════════════════════════ -->
+     04 / WORK — DOORS WALL (Horizontal Sliding Interactive Projects)
+     ══════════════════════════════════════════════════════════════ -->
 <section id="work" data-bg="#161515" data-idx="04">
   <div class="wpin">
     <div class="dh">
@@ -630,40 +685,13 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 </section>
 
 <!-- ══════════════════════════════════════════════════════════════
-     VALUATION LAB (Interactive DCF Slider Calculator)
+     05 / CONTACT SECTION
      ══════════════════════════════════════════════════════════════ -->
-<section id="lab" data-bg="#1b1918" data-idx="05">
-  <div class="lh">
-    <span class="mono">Valuation lab</span>
-    <h2>Move the<br><em>assumptions</em></h2>
-  </div>
-  <div class="lg">
-    <div>
-      <label class="mono">FCF growth, 5 yrs <b id="v1"></b></label>
-      <input type="range" id="gr" min="0" max="25" step="1" value="12">
-      <label class="mono">WACC <b id="v2"></b></label>
-      <input type="range" id="wc" min="6" max="18" step="0.5" value="11">
-      <label class="mono">Terminal growth <b id="v3"></b></label>
-      <input type="range" id="tg" min="0" max="6" step="0.5" value="4">
-      <p class="note">Base free cash flow = 100. A teaching model with normalized inputs, not formal investment advice.</p>
-    </div>
-    <div>
-      <span class="mono" style="color:var(--mute)">Enterprise value (index)</span>
-      <div class="big-n" id="ev">0</div>
-      <div class="bars" id="bars"></div>
-      <span class="mono" id="tvs" style="color:var(--acc)"></span>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════════════
-     CONTACT SECTION
-     ══════════════════════════════════════════════════════════════ -->
-<section id="contact" data-bg="#0e0d0d" data-idx="06">
+<section id="contact" data-bg="#0e0d0d" data-idx="05">
   <div>
     <span class="mono">Open to internships, research roles &amp; projects</span>
     <h2 id="ct"><span class="l1">Let’s</span><span class="l2">talk.</span></h2>
-    <a class="mail" id="mail" href="#"></a>
+    <a class="mail" id="mail" href="mailto:guptakrish8006@gmail.com">guptakrish8006@gmail.com</a>
   </div>
   <div class="foot">
     <div class="soc mono" id="soc"></div>
@@ -688,15 +716,15 @@ if(!window.gsap){document.body.classList.add('nojs');return}
 gsap.registerPlugin(ScrollTrigger);
 
 /* =====================================================================
-   PROFILE CONFIGURATION — Edit your details here
+   PROFILE CONFIGURATION — Linked to your verified credentials
    ===================================================================== */
 const PROFILE = {
   name: 'Krish Gupta',
-  cutout: 'img/krish-cutout.png', // Cutout headshot (PNG with transparent background)
-  photo: 'krish.jpg',             // Fallback profile photo or card photo
-  resume: 'resume.pdf',           // Path to your PDF resume
-  email: 'krishgupta@example.com',
-  linkedin: 'https://www.linkedin.com/in/krish-gupta',
+  cutout: 'img/krish-cutout.png',
+  photo: 'img/presenting.jpg',
+  resume: 'resume.pdf',
+  email: 'guptakrish8006@gmail.com',
+  linkedin: 'https://www.linkedin.com/in/krish-gupta-0aa594243/',
   github: 'https://github.com/krishgupta',
   location: 'Delhi NCR, India'
 };
@@ -825,7 +853,7 @@ if(matchMedia('(hover:hover) and (pointer:fine)').matches){
   const qx = gsap.quickTo(cur, 'x', {duration:.4, ease:'power3'});
   const qy = gsap.quickTo(cur, 'y', {duration:.4, ease:'power3'});
   addEventListener('mousemove', e => { qx(e.clientX); qy(e.clientY); });
-  document.addEventListener('mouseover', e => cur.classList.toggle('big', !!e.target.closest('a,button,input,[data-lb],[data-tog],.spiral-notebook,.cutout-badge')));
+  document.addEventListener('mouseover', e => cur.classList.toggle('big', !!e.target.closest('a,button,input,[data-lb],[data-tog],.spiral-notebook,.cutout-badge,.editorial-frame')));
 } else if(cur) {
   cur.remove();
 }
@@ -834,7 +862,6 @@ if(matchMedia('(hover:hover) and (pointer:fine)').matches){
 const cutoutImg = $('#cutoutImg');
 if(cutoutImg){
   cutoutImg.onerror = function(){
-    // If cutout image is missing, replace with clean monogram fallback
     const parent = cutoutImg.parentElement;
     cutoutImg.remove();
     const fb = document.createElement('div');
@@ -1204,35 +1231,6 @@ document.addEventListener('click', e => {
 addEventListener('keydown', e => {
   if(e.key === 'Escape') lb.classList.contains('open') ? lb.classList.remove('open') : closeP();
 });
-
-/* ─── Valuation Lab Interactive DCF ─── */
-function dcf(){
-  const g = +$('#gr').value/100, w = +$('#wc').value/100, t = +$('#tg').value/100;
-  $('#v1').textContent = (g*100).toFixed(0)+'%';
-  $('#v2').textContent = (w*100).toFixed(1)+'%';
-  $('#v3').textContent = (t*100).toFixed(1)+'%';
-  if(w <= t + .005){
-    $('#ev').textContent = 'n/a';
-    $('#tvs').textContent = 'WACC must exceed terminal growth';
-    return;
-  }
-  let f = 100, sum = 0, pv = [];
-  for(let k = 1; k <= 5; k++){
-    f *= 1 + g;
-    const p = f/Math.pow(1 + w, k);
-    pv.push(p);
-    sum += p;
-  }
-  const tv = f*(1 + t)/(w - t)/Math.pow(1 + w, 5);
-  const ev = sum + tv;
-  const m = Math.max(...pv, tv);
-  $('#ev').textContent = Math.round(ev).toLocaleString('en-IN');
-  $('#tvs').textContent = 'Terminal value = ' + Math.round(tv/ev*100) + '% of EV';
-  $('#bars').innerHTML = pv.map((p,i) => `<div style="height:${p/m*100}%"><em>Y${i+1}</em></div>`).join('') +
-    `<div class="tv" style="height:${tv/m*100}%"><em>TV</em></div>`;
-}
-['gr','wc','tg'].forEach(i => $('#'+i).oninput = dcf);
-dcf();
 
 /* ─── Delhi Clock ─── */
 const fmt = new Intl.DateTimeFormat('en-IN', {hour:'numeric', minute:'2-digit', timeZone:'Asia/Kolkata', hour12:true});
