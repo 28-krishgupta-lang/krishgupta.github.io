@@ -9,10 +9,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--paper:#efece4;--ink:#111512;--mute:#6c7067;--acc:#0b6b4f;--line:rgba(17,21,18,.16);--card:#fbf9f4}
+:root{--paper:#1a1818;--ink:#f2ede4;--mute:#9d978c;--acc:#4bd6a4;--line:rgba(242,237,228,.16);--card:#242120;--dw:clamp(250px,25vw,370px)}
 *{margin:0;padding:0;box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
-body{background:var(--paper);color:var(--ink);font-family:Inter,sans-serif;line-height:1.55;overflow-x:hidden}
+body{background:var(--paper);color:var(--ink);font-family:Inter,sans-serif;font-size:15px;line-height:1.55;overflow-x:hidden}
 html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!important}
 a{color:inherit;text-decoration:none}
 ::selection{background:var(--acc);color:#fff}
@@ -23,25 +23,199 @@ svg *{transform-box:fill-box}
 .c{display:inline-block;will-change:transform}
 .nojs #load{display:none}
 /* loader, cursor, header */
-#load{position:fixed;inset:0;background:var(--ink);color:var(--paper);z-index:9000;display:flex;flex-direction:column;justify-content:space-between;padding:5vw}
-#load .ln{font:400 clamp(5rem,22vw,20rem) 'Instrument Serif',serif;line-height:.8;align-self:flex-end}
-#load .ln i{font-size:.3em;font-style:normal;vertical-align:top}
 #cur{position:fixed;top:0;left:0;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:#fff;mix-blend-mode:difference;pointer-events:none;z-index:8000;transition:width .3s,height .3s,margin .3s}
 #cur.big{width:68px;height:68px;margin:-34px 0 0 -34px}
-.top{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:22px 5vw;z-index:7000;color:#fff;mix-blend-mode:difference}
+.top{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:16px 5vw;z-index:7000;color:#fff;mix-blend-mode:difference}
 .top .mk{font:400 1.7rem 'Instrument Serif',serif}
 .top .ix{display:flex;gap:6px;overflow:hidden}
 .top .ix b{font-weight:500;display:inline-block}
 .top a.ct{border-bottom:1px solid currentColor;padding-bottom:2px}
 section{position:relative}
+.me{display:grid;grid-template-columns:.7fr 1.3fr;gap:6vw;padding:0 5vw 12vh;align-items:end;max-width:1200px}
+.ph{aspect-ratio:4/5;width:100%;max-width:340px;border-radius:999px 999px 24px 24px;overflow:hidden;background:#2d2926;position:relative}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph.empty{display:grid;place-items:center}.ph.empty::after{content:"KG";font:400 7rem 'Instrument Serif',serif;color:var(--acc)}
+.fa{margin-bottom:22px}
+.fa i{display:block;height:1px;background:var(--ink);margin-bottom:18px;transform-origin:left}
+.fa .mono{color:var(--mute);display:block;margin-bottom:8px}
+.fa .serif{font-size:clamp(1.15rem,1.6vw,1.45rem);line-height:1.2}
+.btn{display:inline-flex;gap:10px;align-items:center;background:var(--ink);color:var(--paper);padding:14px 26px;border-radius:40px;font-weight:500;margin-top:8px;transition:background .3s}
+.btn:hover{background:var(--acc)}
+.acts{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center}
+.pc .go{background:var(--ink);color:var(--paper);border:0;font:500 .9rem Inter;padding:13px 24px;border-radius:40px;transition:background .3s}
+.pc .go:hover{background:var(--acc)}
+.lk{border-bottom:1px solid var(--ink);padding-bottom:2px;font-weight:500;font-size:.92rem}
+.more{margin-top:3vh;border-top:1px solid var(--line)}
+.more a,.more div{display:flex;justify-content:space-between;gap:20px;padding:20px 0;border-bottom:1px solid var(--line);font:400 clamp(1.3rem,2.6vw,2.2rem) 'Instrument Serif',serif}
+.more a:hover{color:var(--acc);padding-left:14px;transition:.3s}
+.more span{color:var(--mute);font:500 .72rem 'JetBrains Mono';letter-spacing:.14em;text-transform:uppercase;align-self:center}
+#pm{position:fixed;inset:0;z-index:7500;background:rgba(17,21,18,.5);backdrop-filter:blur(6px);visibility:hidden;opacity:0;transition:opacity .4s,visibility .4s}
+#pm.open{visibility:visible;opacity:1}
+.pmi{position:absolute;left:0;right:0;bottom:0;top:3vh;background:var(--paper);border-radius:28px 28px 0 0;overflow-y:auto;overscroll-behavior:contain;transform:translateY(100%);transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+#pm.open .pmi{transform:none}
+.cs-bar{position:sticky;top:0;z-index:3;display:flex;justify-content:space-between;align-items:center;padding:14px max(5vw,calc((100vw - 1100px)/2));background:rgba(26,24,24,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.cs-bar button{background:none;border:1px solid var(--ink);border-radius:30px;padding:9px 18px;font:500 .72rem 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--ink);transition:.3s}
+.cs-bar button:hover{background:var(--ink);color:var(--paper)}
+.cs-bar div{display:flex;gap:8px}
+.cs-bar>.mono{color:var(--mute)}
+.cs{max-width:1100px;margin:0 auto;padding:7vh 5vw 12vh}
+.cs-hero{display:grid;grid-template-columns:1.3fr .7fr;gap:5vw;align-items:center;margin-bottom:6vh}
+.cs h2{font-size:clamp(2.2rem,4.8vw,4rem);line-height:.98;margin:12px 0 18px}
+.cs .mono{color:var(--mute)}
+.lead2{color:var(--mute);max-width:520px}
+.by{display:flex;gap:14px;align-items:center;margin-top:26px}
+.by img{width:48px;height:48px;border-radius:50%;object-fit:cover;background:#2d2926}
+.by b{display:block;font-weight:600;font-size:.95rem}
+.cs-il{max-width:250px;margin:auto;width:100%}
+.cs-meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));border-top:1px solid var(--ink);margin-bottom:7vh}
+.cs-meta div{padding:16px 16px 18px 0;font-size:.95rem}
+.cs-meta .mono{display:block;margin-bottom:6px}
+.csec{margin-bottom:8vh}
+.csec>h3{font-size:clamp(1.5rem,2.5vw,2.1rem);margin-bottom:24px;display:flex;align-items:center;gap:14px}
+.csec>h3::after{content:"";flex:1;height:1px;background:var(--line)}
+.ov{font:400 clamp(1.15rem,1.7vw,1.5rem)/1.4 'Instrument Serif',serif}
+.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px}
+.sc{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:24px}
+.sc b{display:block;font:400 clamp(2.4rem,4.2vw,3.4rem)/1 'Instrument Serif',serif;color:var(--acc);margin-bottom:8px}
+.sc span{color:var(--mute);font-size:.88rem;display:block}
+.fl-list{margin-top:24px;padding-left:1.2em}.fl-list li{margin-bottom:10px}
+.steps{list-style:none;counter-reset:s;border-left:1px solid var(--line);margin-left:14px}
+.steps li{counter-increment:s;position:relative;padding:0 0 26px 34px}
+.steps li::before{content:counter(s);position:absolute;left:-15px;top:-2px;width:29px;height:29px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;font:500 .72rem 'JetBrains Mono',monospace}
+.gal{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.gal figure{border-radius:18px;overflow:hidden;background:var(--card);border:1px solid var(--line);margin:0}
+.gal figure[data-lb]{cursor:zoom-in}
+.gal img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;transition:transform .6s}
+.gal figure:hover img{transform:scale(1.04)}
+.gal figcaption{padding:12px 16px;font-size:.82rem;color:var(--mute)}
+.gal .empty{border-style:dashed;padding:26px 18px 8px;text-align:center}.gal .empty svg{max-width:110px;margin:auto}
+.lbs{display:flex;flex-wrap:wrap;gap:12px}
+.lb{display:inline-flex;gap:10px;align-items:center;border:1px solid var(--ink);border-radius:40px;padding:12px 22px;font-weight:500;transition:.3s}
+.lb:hover{background:var(--ink);color:var(--paper)}
+.emb{border:1px solid var(--line);border-radius:18px;overflow:hidden;aspect-ratio:16/10;background:#fff}
+.emb iframe{width:100%;height:100%;border:0}
+.nx{display:block;width:100%;text-align:left;border:1px solid var(--ink);border-radius:26px;padding:32px;background:none;color:var(--ink);transition:background .4s,color .4s}
+.nx:hover{background:var(--ink);color:var(--paper)}
+.cs .nx .mono{color:inherit;opacity:.7}
+.nx .serif{font-size:clamp(1.5rem,2.8vw,2.4rem);display:block;margin-top:8px}
+.cs-a{opacity:0;transform:translateY(28px);transition:opacity .8s,transform .8s}
+.cs-a.in{opacity:1;transform:none}
+#lb{position:fixed;inset:0;z-index:7800;background:rgba(17,21,18,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:4vw;visibility:hidden;opacity:0;transition:.3s;cursor:zoom-out}
+#lb.open{visibility:visible;opacity:1}
+#lb img{max-width:92vw;max-height:80vh;border-radius:12px}
+#lb p{color:#e8e5dc;font-size:.9rem}
+.ill{width:100%;height:auto;display:block}
+.il{fill:none;stroke:var(--ink);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.pf{fill:var(--paper)}.fl{fill:#4bd6a4}.fl2{fill:rgba(75,214,164,.3)}
+.phw{position:relative;max-width:340px}.wh,.lh{position:relative}
+.deco{position:absolute;pointer-events:none;animation:flt 6s ease-in-out infinite}
+.d1{left:-34px;top:20px;width:96px}.d2{right:16%;bottom:-4px;width:84px}.d3{right:6%;top:-8px;width:96px}
+@keyframes flt{50%{transform:translateY(-9px) rotate(2deg)}}
+@media(max-width:820px){.cs-hero{grid-template-columns:1fr}.cs-il{max-width:170px;margin:0}.d2,.d3{display:none}.d1{width:80px;right:-8px}}
+/* intro card */
+#intro{position:fixed;inset:0;z-index:9000;background:radial-gradient(60% 60% at 50% 40%,#2a2623,#121010);display:grid;place-items:center;overflow:hidden;cursor:pointer}
+#intro .ld{position:absolute;display:flex;align-items:baseline;gap:6px;color:var(--ink);font:400 clamp(4rem,14vw,10rem) 'Instrument Serif',serif;line-height:1}
+#intro .ld .mono{position:absolute;top:-1.8em;left:0;color:var(--mute);font-size:.72rem;white-space:nowrap}
+#intro .ld i{font-size:.3em;font-style:normal}
+#stage{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;perspective:1100px}
+.swing{position:relative;transform-origin:50% -100vh;animation:sway 5.5s ease-in-out infinite}
+.swing::before{content:"";position:absolute;bottom:calc(100% - 12px);left:50%;width:26px;height:130vh;transform:translateX(-50%);background:linear-gradient(90deg,#24201e,#4bd6a4 50%,#24201e)}
+@keyframes sway{0%,100%{transform:rotate(-1.5deg)}50%{transform:rotate(1.5deg)}}
+#card3d{transform-style:preserve-3d;will-change:transform}
+.tilt{position:relative;transform-style:preserve-3d;width:min(290px,70vw);aspect-ratio:3/4.3}
+.face{position:absolute;inset:0;border-radius:24px;padding:20px;background:linear-gradient(160deg,#2e2926,#191716 62%);border:1px solid rgba(255,255,255,.13);box-shadow:0 40px 80px -20px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.1);display:flex;flex-direction:column;color:var(--ink);overflow:hidden}
+.clip{width:46px;height:10px;border-radius:6px;background:#0d0c0c;border:1px solid rgba(255,255,255,.14);margin:0 auto 14px}
+.cpic{aspect-ratio:1.15;border-radius:14px;overflow:hidden;background:#3a3532;display:grid;place-items:center;position:relative}
+.cpic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 22%}
+.cpic span{font:400 3.2rem 'Instrument Serif',serif;color:var(--acc)}
+.cname{font-size:1.8rem;line-height:1;margin-top:14px}
+.crole{color:var(--acc)!important;margin:6px 0 12px}
+.cchips{display:flex;flex-wrap:wrap;gap:6px}
+.cchips span{font:500 .6rem 'JetBrains Mono',monospace;letter-spacing:.08em;text-transform:uppercase;border:1px solid rgba(255,255,255,.18);padding:4px 9px;border-radius:20px;color:var(--mute)}
+.cfoot{margin-top:auto;display:flex;justify-content:space-between;color:var(--mute)!important;font-size:.6rem!important}
+.code{height:24px;margin-top:10px;background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 5px,var(--ink) 5px 6px,transparent 6px 10px);opacity:.7;border-radius:2px}
+.shine{position:absolute;inset:0;background:radial-gradient(280px circle at var(--sx,50%) var(--sy,30%),rgba(255,255,255,.2),transparent 60%);mix-blend-mode:overlay;pointer-events:none}
+#enter{margin-top:34px;background:none;border:1px solid var(--ink);color:var(--ink);padding:12px 28px;border-radius:40px;font:500 .72rem 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;transition:.3s}
+#enter:hover{background:var(--ink);color:var(--paper)}
+/* header extras + menu */
+.top .tr{display:flex;align-items:center;gap:16px}
+.top .clk{opacity:.8}
+.top .mn{background:none;border:1px solid currentColor;border-radius:30px;padding:7px 18px;color:inherit;font:500 .72rem 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase}
+#menu{position:fixed;inset:0;z-index:6900;background:var(--paper);clip-path:inset(0 0 100% 0);visibility:hidden;transition:clip-path .9s cubic-bezier(.7,0,.2,1),visibility 0s .9s}
+#menu.open{clip-path:inset(0);visibility:visible;transition:clip-path .9s cubic-bezier(.7,0,.2,1),visibility 0s 0s}
+#menu .mi{height:100%;display:flex;flex-direction:column;justify-content:center;padding:12vh 5vw 6vh;max-width:1250px;margin:0 auto}
+#menu nav a{display:block;overflow:hidden;font:400 clamp(2.2rem,6.4vw,5rem)/1.08 'Instrument Serif',serif;letter-spacing:-.02em}
+#menu nav a span{display:inline-block;transition:color .3s,transform .4s}
+#menu nav a i{font:500 .72rem 'JetBrains Mono',monospace;color:var(--mute);margin-right:16px;vertical-align:top;font-style:normal}
+#menu nav a:hover span{color:var(--acc);font-style:italic;transform:translateX(14px)}
+#menu .mf{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:7vh;color:var(--mute)}
+.hstat{position:absolute;right:5vw;bottom:5vh;display:flex;gap:10px;align-items:center;color:var(--mute)}
+.hstat i{width:8px;height:8px;border-radius:50%;background:var(--acc);animation:pg 1.8s infinite}
+@keyframes pg{0%{box-shadow:0 0 0 0 rgba(75,214,164,.6)}100%{box-shadow:0 0 0 10px transparent}}
+/* timeline with odometer */
+.jv{height:100vh;display:grid;grid-template-columns:1fr 1fr;gap:6vw;align-items:center;padding:0 5vw;max-width:1250px;margin:0 auto}
+.jl .mono{color:var(--mute)}
+.jl h2{font-size:clamp(2.2rem,4.6vw,4.2rem);line-height:1;margin:14px 0 6vh}
+.odo{display:flex;align-items:flex-end;color:var(--ink);font:400 clamp(4rem,9vw,7.5rem)/1 'Instrument Serif',serif}
+.od{height:1em;overflow:hidden;width:.56em}
+.od .strip{transition:transform .9s cubic-bezier(.7,0,.2,1)}
+.od .strip span{display:block;height:1em;line-height:1;text-align:center}
+.of{font:500 .8rem 'JetBrains Mono',monospace;color:var(--mute);margin:0 0 1em 1em}
+.jl .jbar{position:static;width:min(260px,70%);margin-top:5vh}
+.jr{position:relative;min-height:46vh}
+.je{position:absolute;left:0;right:0;top:0;opacity:0;transform:translateY(40px);transition:opacity .7s,transform .7s;pointer-events:none}
+.je.on{opacity:1;transform:none;pointer-events:auto}
+.je .mono{color:var(--acc);display:block;margin-bottom:12px}
+.je h3{font-size:clamp(1.7rem,3vw,2.6rem);line-height:1.05;margin-bottom:14px}
+.je p{color:var(--mute);max-width:440px}
+.je p em{color:var(--ink)}
+/* doors */
+.wpin{height:100vh;position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:11vh;overflow:hidden}
+.wpin::after{content:"";position:absolute;left:0;right:0;bottom:11vh;height:1px;background:var(--line)}
+.dh{position:absolute;top:13vh;left:5vw;right:5vw;display:flex;justify-content:space-between;align-items:flex-end;gap:20px}
+.dh h2{font-size:clamp(2rem,4.2vw,3.8rem);line-height:1}
+.dh .mono{color:var(--mute)}
+.wall{display:flex;align-items:flex-end;gap:5vw;width:max-content;padding:0 calc(50vw - var(--dw)/2);position:relative;z-index:1}
+.door{width:var(--dw);flex:none;perspective:1400px}
+.frame{position:relative;height:clamp(330px,54vh,500px);border-radius:999px 999px 0 0;background:#0e0d0d;border:9px solid #2d2a27;border-bottom:0;transition:box-shadow .9s}
+.room{position:absolute;inset:0;border-radius:999px 999px 0 0;background:radial-gradient(ellipse at 50% 85%,#f6e3b4,#d9bd84 62%,#a98a55);color:#1a1818;display:flex;align-items:flex-end;justify-content:center;padding:0 20px 22px;text-align:center;overflow:hidden}
+.rin{display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;opacity:0;transform:translateY(20px);transition:opacity .6s .5s,transform .6s .5s}
+.rin .ill{width:68px}.rin .il{stroke:#1a1818}.rin .fl{fill:#1a1818}.rin .fl2{fill:rgba(26,24,24,.25)}.rin .pf{fill:#e9d3a0}
+.rin .mono{color:#5b4a2a}
+.rin h3{font-size:clamp(1.25rem,1.7vw,1.6rem);line-height:1}
+.rin p{font-size:.78rem;line-height:1.4;color:#3d3426;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.rin .go{background:#1a1818;color:#f1ece2;border:0;border-radius:30px;padding:10px 18px;font:500 .78rem Inter,sans-serif;transition:background .3s}
+.rin .go:hover{background:#4bd6a4;color:#1a1818}
+.leaf{position:absolute;inset:0;border-radius:999px 999px 0 0;background:linear-gradient(100deg,#3b332d,#2a2420 60%,#342d28);transform-origin:left center;transition:transform 1.2s cubic-bezier(.7,0,.2,1);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:0 0 26px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+.leaf .dn{position:absolute;top:19%;font:400 3.2rem 'Instrument Serif',serif;color:rgba(241,236,226,.3)}
+.leaf .pnl{position:absolute;left:18%;right:18%;border:1px solid rgba(255,255,255,.1);border-radius:90px 90px 6px 6px}
+.leaf .hdl{position:absolute;right:12%;top:56%;width:14px;height:14px;border-radius:50%;background:#e9c777;box-shadow:0 0 12px rgba(233,199,119,.6)}
+.leaf .dl{position:relative;font-size:1.2rem;color:#f1ece2;text-align:center;padding:0 18px;line-height:1.05}
+.door:not(.open) .leaf:hover{transform:rotateY(-9deg)}
+.door.open .leaf{transform:rotateY(-82deg)}
+.door.open .frame{box-shadow:0 0 110px 10px rgba(246,227,180,.2)}
+.door.open .rin{opacity:1;transform:none}
+.mw{padding:8vh 5vw 4vh;max-width:1250px;margin:0 auto}
+@media(max-width:820px){.ph2{right:-6%;width:46%}:root{--dw:72vw}.jv{grid-template-columns:1fr;gap:3vh;align-content:center}.jr{min-height:34vh}.dh .mono{display:none}.top .clk{display:none}.hstat{display:none}}
+.ph2{position:absolute;right:-20%;bottom:-10%;width:54%;margin:0;transform:rotate(3deg);border:6px solid var(--paper);border-radius:18px;overflow:hidden;background:var(--card);box-shadow:0 30px 50px -20px rgba(0,0,0,.65)}
+.ph2 img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:50% 36%;display:block}
+.ph2 figcaption{position:absolute;left:0;right:0;bottom:0;padding:24px 8px 9px;background:linear-gradient(transparent,rgba(0,0,0,.72));color:#f2ede4;font-size:.58rem;text-align:center}
+.callout{border-left:3px solid var(--acc);background:var(--card);padding:22px 26px;border-radius:0 18px 18px 0;margin-bottom:8vh}
+.callout .mono{color:var(--acc)!important;display:block;margin-bottom:8px}
+.callout p{font:400 clamp(1.2rem,2vw,1.7rem)/1.3 'Instrument Serif',serif}
+.gal figure.wide{grid-column:1/-1}
+.gal figure.doc img{aspect-ratio:auto;height:auto;background:#fff}
+.gal figure.tall img{aspect-ratio:3/4}
+.door.lock .leaf{cursor:default}.door.lock .leaf:hover{transform:none}
+.lk2{position:relative;color:rgba(241,236,226,.55);text-align:center;font:500 .7rem 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;line-height:1.6;padding:0 14px}
 /* hero */
 #hero{height:100vh}
 .hw{height:100vh;padding:0 5vw;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
 .eyebrow{color:var(--mute);margin-bottom:2.2vh}
-#name{font-size:clamp(4.6rem,20vw,19rem);line-height:.84;transform-origin:left top}
+#name{font-size:clamp(3.4rem,12.5vw,10.5rem);line-height:.86;transform-origin:left top}
 #name .l{display:block}
-#name .l2{margin-left:9vw;font-style:italic;color:var(--acc)}
-.sub{max-width:430px;margin-top:4vh;color:var(--mute);font-size:1.02rem}
+#name .l2{margin-left:6vw;font-style:italic;color:var(--acc)}
+.sub{max-width:400px;margin-top:3vh;color:var(--mute);font-size:.95rem}
 .scroll{position:absolute;left:5vw;bottom:5vh;display:flex;align-items:center;gap:14px;color:var(--mute)}
 .scroll i{display:block;width:60px;height:1px;background:var(--ink);transform-origin:left;animation:sc 2.2s infinite}
 @keyframes sc{0%{transform:scaleX(0)}50%{transform:scaleX(1);transform-origin:left}51%{transform-origin:right}100%{transform:scaleX(0);transform-origin:right}}
@@ -49,105 +223,127 @@ section{position:relative}
 #cp{fill:none;stroke:var(--ink);stroke-width:2;stroke-linecap:round;vector-effect:non-scaling-stroke}
 #cd{fill:var(--acc)}
 /* about */
-.mani{padding:26vh 5vw 8vh;max-width:1400px}
-.mani p{font:400 clamp(1.9rem,4.4vw,4.2rem)/1.14 'Instrument Serif',serif;letter-spacing:-.015em}
+.mani{padding:18vh 5vw 6vh;max-width:1100px}
+.mani p{font:400 clamp(1.5rem,2.7vw,2.6rem)/1.2 'Instrument Serif',serif;letter-spacing:-.015em}
 .mani em{color:var(--acc)}
-.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:4vw;padding:0 5vw 16vh}
-.fact i{display:block;height:1px;background:var(--ink);margin-bottom:18px;transform-origin:left}
-.fact .mono{color:var(--mute);display:block;margin-bottom:8px}
-.fact .serif{font-size:clamp(1.4rem,2.2vw,2rem);line-height:1.15}
-.mq{overflow:hidden;padding:2vh 0 14vh}
-.mq .row{display:flex;white-space:nowrap;width:max-content;will-change:transform;font:400 clamp(3rem,9vw,8.4rem)/1.1 'Instrument Serif',serif;letter-spacing:-.02em}
+.mq{overflow:hidden;padding:2vh 0 10vh}
+.mq .row{display:flex;white-space:nowrap;width:max-content;will-change:transform;font:400 clamp(2.2rem,5.4vw,4.8rem)/1.15 'Instrument Serif',serif;letter-spacing:-.02em}
 .mq .row span{padding-right:.4em}
 .mq .row span:nth-child(even){color:transparent;-webkit-text-stroke:1px var(--ink);font-style:italic}
 /* journey */
 #journey{height:100vh;overflow:hidden}
-.jh{position:absolute;top:13vh;left:5vw;z-index:2}
+.jh{position:absolute;top:12vh;left:5vw;z-index:2}
 .jh .mono{color:var(--mute);display:block;margin-bottom:10px}
-.jh h2{font-size:clamp(2.2rem,5vw,4.4rem);line-height:1}
-.track{display:flex;align-items:center;height:100%;padding:12vh 25vw 0 5vw;gap:7vw;width:max-content}
-.pn{width:min(480px,80vw);flex:none}
-.pn .num{font:400 clamp(5rem,13vw,11rem)/.9 'Instrument Serif',serif;color:transparent;-webkit-text-stroke:1px var(--ink);margin-bottom:3vh}
+.jh h2{font-size:clamp(1.8rem,3.4vw,3rem);line-height:1}
+.track{display:flex;align-items:center;height:100%;padding:10vh 22vw 0 5vw;gap:6vw;width:max-content}
+.pn{width:min(380px,80vw);flex:none}
+.pn .num{font:400 clamp(3.4rem,8vw,6.8rem)/.9 'Instrument Serif',serif;color:transparent;-webkit-text-stroke:1px var(--ink);margin-bottom:3vh}
 .pn .mono{color:var(--acc);display:block;margin-bottom:10px}
-.pn h3{font-size:clamp(1.7rem,2.8vw,2.5rem);line-height:1.05;margin-bottom:12px}
+.pn h3{font-size:clamp(1.35rem,1.9vw,1.8rem);line-height:1.1;margin-bottom:10px}
 .pn p{color:var(--mute);max-width:400px}
 .pn p em{color:var(--ink)}
 .jbar{position:absolute;left:5vw;right:5vw;bottom:6vh;height:1px;background:var(--line)}
 .jbar i{display:block;height:100%;background:var(--ink);transform:scaleX(0);transform-origin:left}
 /* work */
-#work{padding:20vh 5vw 8vh}
-.wh{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:8vh;gap:20px;flex-wrap:wrap}
-.wh h2{font-size:clamp(2.6rem,7vw,6.4rem);line-height:.95}
+#work{padding:0}
+.wh{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:5vh;gap:20px;flex-wrap:wrap}
+.wh h2{font-size:clamp(2.1rem,4.4vw,4rem);line-height:.98}
 .wh .mono{color:var(--mute)}
-.pc{position:sticky;display:grid;grid-template-columns:1.1fr .9fr;gap:4vw;min-height:68vh;margin-bottom:10vh;padding:3.4vw;background:var(--card);border:1px solid var(--line);border-radius:30px;box-shadow:0 40px 70px -40px rgba(17,21,18,.35);will-change:transform}
+.pc{position:sticky;display:grid;grid-template-columns:1.1fr .9fr;gap:3vw;min-height:56vh;margin-bottom:6vh;padding:2.4vw;background:var(--card);border:1px solid var(--line);border-radius:30px;box-shadow:0 40px 70px -40px rgba(17,21,18,.35);will-change:transform}
 .pc:nth-child(2){background:#f0f3ec}.pc:nth-child(3){background:#f6f1e6}.pc:nth-child(4){background:#eaf0ea}.pc:nth-child(5){background:#f4f2ea}
 .pc .l{display:flex;flex-direction:column;justify-content:space-between;gap:30px}
 .pc .mono{color:var(--mute)}
-.pc h3{font-size:clamp(2.1rem,4.2vw,3.9rem);line-height:.98;margin:2vh 0}
-.pc p{color:var(--mute);max-width:470px}
+.pc h3{font-size:clamp(1.6rem,2.7vw,2.5rem);line-height:1;margin:1.6vh 0}
+.pc p{color:var(--mute);max-width:440px;font-size:.93rem}
 .tags{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0}
 .tags span{font:500 .7rem 'JetBrains Mono';letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line);padding:6px 12px;border-radius:30px}
-.pc .go{border-bottom:1px solid var(--ink);align-self:flex-start;padding-bottom:3px;font-weight:500}
-.pc .vp{border-radius:20px;background:rgba(11,107,79,.07);display:grid;place-items:center;padding:20px}
-.vp svg{width:100%;max-width:420px;height:auto}
+.pc .vp{border-radius:20px;background:rgba(75,214,164,.07);display:grid;place-items:center;padding:20px}
+.vp svg{width:100%;max-width:340px;height:auto}
 .ln{fill:none;stroke:var(--ink);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .also{color:var(--mute);margin-top:2vh;max-width:760px;font-size:.95rem}
 .also b{color:var(--ink);font-weight:500}
 /* lab */
-#lab{padding:16vh 5vw 18vh}
-.lh{margin-bottom:7vh}
+#lab{padding:12vh 5vw 14vh;max-width:1250px;margin:0 auto}
+.lh{margin-bottom:5vh}
 .lh .mono{color:var(--mute);display:block;margin-bottom:10px}
-.lh h2{font-size:clamp(2.4rem,6vw,5.4rem);line-height:.98}
+.lh h2{font-size:clamp(2rem,3.9vw,3.4rem);line-height:1}
 .lg{display:grid;grid-template-columns:.9fr 1.1fr;gap:6vw}
 .lg label{display:flex;justify-content:space-between;margin:26px 0 10px;color:var(--mute)}
 .lg label b{color:var(--ink);font-weight:500}
 input[type=range]{width:100%;appearance:none;height:1px;background:var(--ink);outline:0}
 input[type=range]::-webkit-slider-thumb{appearance:none;width:22px;height:22px;border-radius:50%;background:var(--acc);border:4px solid var(--paper);box-shadow:0 0 0 1px var(--ink)}
 input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--acc);border:4px solid var(--paper)}
-.big-n{font:400 clamp(4rem,10vw,8.5rem)/.9 'Instrument Serif',serif;color:var(--acc)}
-.bars{display:flex;align-items:flex-end;gap:12px;height:170px;margin:26px 0 30px}
+.big-n{font:400 clamp(3rem,6vw,5rem)/.9 'Instrument Serif',serif;color:var(--acc)}
+.bars{display:flex;align-items:flex-end;gap:10px;height:140px;margin:26px 0 30px}
 .bars div{flex:1;background:var(--ink);transition:height .5s cubic-bezier(.2,.9,.3,1.1);position:relative;min-height:3px}
 .bars div.tv{background:var(--acc)}
 .bars em{position:absolute;bottom:-24px;left:0;right:0;text-align:center;font:400 .66rem 'JetBrains Mono';color:var(--mute);font-style:normal}
 .note{color:var(--mute);font-size:.8rem;margin-top:18px}
 /* contact */
-#contact{min-height:100vh;display:flex;flex-direction:column;justify-content:space-between;padding:22vh 5vw 5vh;color:var(--paper)}
+const ml=$('#mail');ml.href='mailto:'+PROFILE.email;ml.textContent=PROFILE.email;$('#mmail').href='mailto:'+PROFILE.email;$('#mmail').textContent=PROFILE.email;
+$('#soc').innerHTML=[['LinkedIn',PROFILE.linkedin],['GitHub',PROFILE.github]].filter(x=>x[1]).map(x=>`<a href="${x[1]}" target="_blank" rel="noopener">${x[0]}</a>`).join('');
+#contact{min-height:100vh;display:flex;flex-direction:column;justify-content:space-between;padding:16vh 5vw 4vh;color:var(--ink)}
 #contact .mono{color:#9aa095}
-#ct{font-size:clamp(5rem,23vw,22rem);line-height:.82;margin:4vh 0}
-#ct .l2{font-style:italic;color:#4bd6a4;display:block;margin-left:10vw}
+#ct{font-size:clamp(3.6rem,14vw,11rem);line-height:.85;margin:3vh 0}
+#ct .l2{font-style:italic;color:#4bd6a4;display:block;margin-left:7vw}
 #ct .l1{display:block}
-.mail{font:400 clamp(1.4rem,3.6vw,3.2rem) 'Instrument Serif',serif;border-bottom:1px solid #6c7067;display:inline-block;transition:color .3s,border-color .3s}
+.mail{font:400 clamp(1.2rem,2.3vw,2rem) 'Instrument Serif',serif;border-bottom:1px solid #6c7067;display:inline-block;transition:color .3s,border-color .3s}
 .mail:hover{color:#4bd6a4;border-color:#4bd6a4}
-.foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px;margin-top:10vh;align-items:flex-end}
+.foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px;margin-top:8vh;align-items:flex-end}
 .soc{display:flex;gap:28px}
 .soc a{border-bottom:1px solid transparent;transition:.3s}
 .soc a:hover{border-color:currentColor}
-@media(max-width:820px){.pc,.lg{grid-template-columns:1fr}.pc{min-height:auto;padding:24px}.pc .vp{min-height:220px}.facts{grid-template-columns:1fr;gap:34px}#name .l2{margin-left:4vw}}
+@media(max-width:820px){.pc,.lg{grid-template-columns:1fr}.pc{min-height:auto;padding:24px}.pc .vp{min-height:220px}.me{grid-template-columns:1fr}.pgd{grid-template-columns:1fr}#name .l2{margin-left:4vw}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
 </head>
 <body>
-<div id="load"><span class="mono">Krish Gupta — Portfolio 2026</span><div class="ln"><span id="cnt">0</span><i>%</i></div></div>
+<div id="intro">
+  <div class="ld"><span class="mono">Loading the card</span><b id="cnt" style="font-weight:400">0</b><i>%</i></div>
+  <div id="stage">
+    <div class="swing"><div id="card3d"><div class="tilt"><div class="face">
+      <div class="clip"></div>
+      <div class="cpic"><span>KG</span><img id="cardpic" alt=""></div>
+      <div class="cname serif">Krish Gupta</div>
+      <div class="mono crole">Finance · Markets · Research</div>
+      <div class="cchips"><span>Valuation</span><span>Modelling</span><span>Equity research</span><span>CFA L1</span></div>
+      <div class="code"></div>
+      <div class="cfoot mono"><span>My ability card</span><span>FIIB ’28</span></div>
+      <div class="shine"></div>
+    </div></div></div></div>
+    <button id="enter">Click to enter</button>
+  </div>
+</div>
 <div id="cur"></div>
-<header class="top"><a href="#hero" class="mk" data-go>KG</a><span class="ix mono"><b id="ci">01</b><span>/ 06</span></span><a href="#contact" class="ct mono" data-go>Contact</a></header>
+<header class="top"><a href="#hero" class="mk" data-go>KG</a><span class="ix mono"><b id="ci">01</b><span>/ 06</span></span><div class="tr"><span class="clk mono">Delhi <span id="clk"></span></span><button class="mn" id="menuBtn">Menu</button></div></header>
 
+<div id="menu"><div class="mi" data-lenis-prevent>
+  <nav><a href="#hero"><i>01</i><span>Home</span></a><a href="#about"><i>02</i><span>About</span></a><a href="#journey"><i>03</i><span>My story</span></a><a href="#work"><i>04</i><span>Work</span></a><a href="#lab"><i>05</i><span>Valuation lab</span></a><a href="#contact"><i>06</i><span>Contact</span></a></nav>
+  <div class="mf mono"><span>Delhi · <span id="clk2"></span></span><a id="mmail" href="#"></a></div>
+</div></div>
 <main>
-<section id="hero" data-bg="#efece4" data-idx="01">
+<section id="hero" data-bg="#1a1818" data-idx="01">
   <div class="hw">
     <p class="eyebrow mono">Finance · Markets · Research</p>
     <h1 id="name"><span class="l l1">Krish</span><span class="l l2">Gupta</span></h1>
     <p class="sub">PGDM Financial Management at FIIB Delhi. CFA Level 1 candidate. I turn annual reports and messy market data into clear views.</p>
     <svg id="curve" viewBox="0 0 1200 400"><path id="cp" d="M0 350 C120 340 170 290 270 305 S430 230 530 255 S690 150 790 175 S990 80 1090 105 S1160 45 1200 30"/><circle id="cd" r="7" cx="0" cy="350"/></svg>
     <div class="scroll mono"><i></i>Scroll</div>
+    <div class="hstat mono"><i></i>Open to internships · Delhi <span id="clk3"></span></div>
   </div>
 </section>
 
-<section id="about" data-bg="#efece4" data-idx="02">
+<section id="about" data-bg="#1a1818" data-idx="02">
   <div class="mani"><p id="mani">I’m a finance student who likes turning annual reports and messy market data into clear views. I care about valuation, risk, and the story the numbers are really telling. When I’m not modelling, I build small web tools that people actually use.</p></div>
-  <div class="facts">
-    <div class="fact"><i></i><span class="mono">Now</span><div class="serif">PGDM, Financial Management<br>FIIB Delhi · 2026–28</div></div>
-    <div class="fact"><i></i><span class="mono">Before</span><div class="serif">B.Com<br>Amity University · 2025</div></div>
-    <div class="fact"><i></i><span class="mono">Next</span><div class="serif">CFA Level 1<br>Equity research · AM · IB</div></div>
+  <div class="me">
+    <div class="phw"><div class="ph"><img alt="Krish Gupta" id="pic"></div><figure class="ph2"><img src="img/presenting.jpg" alt="Krish presenting at FIIB Delhi" loading="lazy"><figcaption class="mono">Presenting at FIIB</figcaption></figure></div>
+    <div class="r">
+      <div class="fa"><i></i><span class="mono">Now</span><div class="serif">PGDM, Financial Management<br>FIIB Delhi · 2026–28</div></div>
+      <div class="fa"><i></i><span class="mono">Before</span><div class="serif">B.Com<br>Amity University · 2025</div></div>
+      <div class="fa"><i></i><span class="mono">Next</span><div class="serif">CFA Level 1<br>Equity research · Asset management · IB</div></div>
+      <div class="fa"><i></i><span class="mono">Based in</span><div class="serif" id="loc"></div></div>
+      <a class="btn" id="cv" download>Download résumé ↓</a>
+    </div>
   </div>
   <div class="mq">
     <div class="row" data-d="-1"><span>Valuation</span><span>Financial Modelling</span><span>Equity Research</span><span>Debt Markets</span><span>CAPM &amp; Beta</span><span>IPO Analysis</span></div>
@@ -155,29 +351,30 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
   </div>
 </section>
 
-<section id="journey" data-bg="#dde5da" data-idx="03">
-  <div class="jh"><span class="mono">Journey</span><h2>The path so far</h2></div>
-  <div class="track">
-    <div class="pn"><div class="num">’22</div><span class="mono">2022 — 2025</span><h3>B.Com, Amity University</h3><p>A base in accounting, commerce and economics.</p></div>
-    <div class="pn"><div class="num">Int.</div><span class="mono">Internships</span><h3>Paisalo &amp; Karuna Compassion NGO</h3><p>Financial services on one side, social impact on the other. <em>(Add your role and one result for each.)</em></p></div>
-    <div class="pn"><div class="num">’26</div><span class="mono">2026 — 2028</span><h3>PGDM in Financial Management, FIIB Delhi</h3><p>Field studies, valuation, markets and communication.</p></div>
-    <div class="pn"><div class="num">L1</div><span class="mono">In progress</span><h3>CFA Level 1</h3><p>Ethics, financial reporting, equity and fixed income.</p></div>
-    <div class="pn"><div class="num">→</div><span class="mono">Next</span><h3>Equity research, asset management, investment banking</h3><p>Looking for internships where I can learn fast and own real work.</p></div>
+<section id="journey" data-bg="#201e1c" data-idx="03">
+  <div class="jv">
+    <div class="jl"><span class="mono">My story</span><h2>Let’s go back<br>in <em>time.</em></h2>
+      <div class="odo"><div class="od"><div class="strip" id="od1"></div></div><div class="od"><div class="strip" id="od2"></div></div><span class="of">/ 05</span></div>
+      <div class="jbar"><i></i></div></div>
+    <div class="jr">
+      <article class="je"><span class="mono">2022 — 2025</span><h3>B.Com, Amity University</h3><p>A base in accounting, commerce and economics.</p></article>
+      <article class="je"><span class="mono">Internships</span><h3>Paisalo &amp; Karuna Compassion NGO</h3><p>Financial services on one side, social impact on the other. <em>(Add your role and one result for each.)</em></p></article>
+      <article class="je"><span class="mono">2026 — 2028</span><h3>PGDM in Financial Management, FIIB Delhi</h3><p>Field studies, valuation, markets and communication.</p></article>
+      <article class="je"><span class="mono">In progress</span><h3>CFA Level 1</h3><p>Ethics, financial reporting, equity and fixed income.</p></article>
+      <article class="je"><span class="mono">Next</span><h3>Equity research, asset management, investment banking</h3><p>Looking for internships where I can learn fast and own real work.</p></article>
+    </div>
   </div>
-  <div class="jbar"><i></i></div>
 </section>
 
-<section id="work" data-bg="#f3efe6" data-idx="04">
-  <div class="wh"><h2>Selected<br><em>work</em></h2><span class="mono">Scroll to stack</span></div>
-  <article class="pc"><div class="l"><div><span class="mono">01 — Equity research</span><h3>ITC Limited,<br><em>deep dive</em></h3><p>Five years of financials, ratio analysis and a red-flag scan from the annual report, plus a CAPM beta study against the Nifty 50.</p><div class="tags"><span>Ratios</span><span>CAPM</span><span>Excel</span></div></div><a class="go" href="#">View case ↗</a></div><div class="vp" data-v="bars"></div></article>
-  <article class="pc"><div class="l"><div><span class="mono">02 — Fixed income</span><h3>Indian corporate<br><em>debt market</em></h3><p>FY22 to FY26: market size to GDP, primary issuance, secondary trading, FPI flows and a view on private placements and AAA dominance. Every number has a source link.</p><div class="tags"><span>Debt markets</span><span>Research</span></div></div><a class="go" href="#">View study ↗</a></div><div class="vp" data-v="area"></div></article>
-  <article class="pc"><div class="l"><div><span class="mono">03 — Field study</span><h3>Production<br><em>economics</em></h3><p>A customised iron-structures business studied through the Cobb–Douglas function, with returns to scale and a clear conclusion.</p><div class="tags"><span>Cobb–Douglas</span><span>Fieldwork</span></div></div><a class="go" href="#">View repo ↗</a></div><div class="vp" data-v="scatter"></div></article>
-  <article class="pc"><div class="l"><div><span class="mono">04 — Product</span><h3>Queueless,<br><em>canteen app</em></h3><p>Order ahead, track it live and collect with a QR code. OTP login and a kitchen dashboard for the operator.</p><div class="tags"><span>React</span><span>Firebase</span><span>QR</span></div></div><a class="go" href="#">View project ↗</a></div><div class="vp" data-v="qr"></div></article>
-  <article class="pc"><div class="l"><div><span class="mono">05 — Product</span><h3>Society<br><em>e-voting</em></h3><p>An election system for a housing society with real-time results and credentials sent by email.</p><div class="tags"><span>React</span><span>Firestore</span><span>EmailJS</span></div></div><a class="go" href="#">View project ↗</a></div><div class="vp" data-v="ballot"></div></article>
-  <p class="also"><b>Also:</b> India IPO market analysis, business cases (BYJU’S, Snitch, Ola Electric) and an interactive Production Function Explorer.</p>
+<section id="work" data-bg="#1a1818" data-idx="04">
+  <div class="wpin">
+    <div class="dh"><h2>Magic happens<br><em>behind the doors</em></h2><span class="mono">Swipe along the wall →</span></div>
+    <div class="wall" id="wall"></div>
+  </div>
+  <div class="mw"><div class="more" id="more"></div></div>
 </section>
 
-<section id="lab" data-bg="#e7eae1" data-idx="05">
+<section id="lab" data-bg="#1f1d1b" data-idx="05">
   <div class="lh"><span class="mono">Valuation lab</span><h2>Move the<br><em>assumptions</em></h2></div>
   <div class="lg">
     <div>
@@ -195,19 +392,21 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
   </div>
 </section>
 
-<section id="contact" data-bg="#111512" data-idx="06">
+<section id="contact" data-bg="#0f0e0e" data-idx="06">
   <div>
     <span class="mono">Open to internships and projects</span>
     <h2 id="ct"><span class="l1">Let’s</span><span class="l2">talk.</span></h2>
-    <a class="mail" href="mailto:YOUR_EMAIL@example.com">YOUR_EMAIL@example.com</a>
+    <a class="mail" id="mail" href="#"></a>
   </div>
   <div class="foot">
-    <div class="soc mono"><a href="https://www.linkedin.com/in/YOUR-LINKEDIN" target="_blank" rel="noopener">LinkedIn</a><a href="https://github.com/YOUR-GITHUB" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="soc mono" id="soc"></div>
     <span class="mono">© 2026 Krish Gupta · Delhi NCR</span>
   </div>
 </section>
 </main>
 
+<div id="pm" aria-hidden="true"><div class="pmi" data-lenis-prevent id="pmc"></div></div>
+<div id="lb"><img alt=""><p></p></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
@@ -215,6 +414,60 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 (function(){
 if(!window.gsap){document.body.classList.add('nojs');return}
 gsap.registerPlugin(ScrollTrigger);
+/* =====================================================================
+   EDIT HERE — all your links, photo and project details live in this block
+   Put krish.jpg and resume.pdf next to index.html in your repo.
+   Any link with an empty url ('') is hidden automatically.
+   ===================================================================== */
+const PROFILE={name:'Krish Gupta',photo:'krish.jpg',resume:'resume.pdf',email:'YOUR_EMAIL@example.com',linkedin:'https://www.linkedin.com/in/YOUR-LINKEDIN',github:'https://github.com/YOUR-GITHUB',location:'Delhi NCR, India'};
+/* HOW TO FILL A PROJECT (shown when a recruiter opens it)
+   findings : big-number cards -> {v:'0.82',l:'Beta vs Nifty 50'}   plain insight -> 'text'
+   photos   : {src:'img/x.jpg',cap:'caption',wide:true (full width),doc:true (white report figure),tall:true (portrait photo)}
+   callout  : one-line bottom line  |  limits : honest limits of the study  |  embed : PDF/page shown inside the popup
+   role, period, overview, callout, limits, embed : optional, hidden when empty */
+const PROJECTS=[
+{num:'01',kicker:'Field study · Production economics',illus:'factory',title:'From Iron Rods<br><em>to Insight</em>',
+ summary:'A 26-year-old maker of customised iron structures, studied through one owner interview and the Cobb–Douglas framework: what limits its growth, and is it getting more efficient as it grows?',
+ tags:['Cobb–Douglas','Returns to scale','Owner interview','Field study'],
+ role:'Author · individual assignment',period:'Term 1 · PGDM 2026–28',tools:['One structured owner interview','Cobb–Douglas framework','Owner estimates (est.)'],
+ overview:'PC Jain Company makes customised iron structures for construction firms and builders. One structured interview with the owner was grouped under labour, capital, technology and output, then mapped onto the Cobb–Douglas production function. Figures marked (est.) are owner estimates, not audited data.',
+ callout:'The business is held back by people, not machines. Build a skilled-worker pipeline first, then expand CNC capacity, then cut scrap with digital cutting plans.',
+ findings:[{v:'26',l:'years in operation'},{v:'2 + 4 + ~11',l:'owners, permanent staff, variable workers'},{v:'~100 → ~300 m',l:'output per day, normal → peak (est.)'},{v:'~20 → ~30',l:'orders per week, normal → peak (est.)'},
+  'Skilled labour is the binding constraint. Demand and machinery are not the main limits.',
+  'Capital and technology raise productivity, but only skilled people can run them: labour and capital behave as complements.',
+  'Peak output is about three times normal while orders rise by about half. This is consistent with increasing returns, but it is an indication, not proof.',
+  'Custom work creates scrap. No scrap percentage was collected, so the size of the problem is still unknown.'],
+ steps:['Held one structured interview with the owner of PC Jain Company','Grouped the answers under labour, capital, technology and output','Mapped them onto Q = A · Lα · Kβ. The exponents were not estimated, because that needs input and output data over time','Compared normal and peak output and orders to test for returns to scale','Recommended, in order: train skilled workers, expand CNC capacity, then use digital cutting plans to cut scrap'],
+ limits:['Based on one owner interview, with no site measurement and no second source','Orders and output figures are owner estimates','The Cobb–Douglas exponents were not estimated, so the model is a framework, not a fitted equation','No data on scrap percentage, wages, machine costs or purchase dates'],
+ photos:[{src:'img/pc-field-1.jpg',cap:'Field photo: steel plates at the yard',tall:true},{src:'img/pc-field-2.jpg',cap:'Field photo: the working yard',tall:true},
+  {src:'img/pc-process-flow.jpg',cap:'Figure 1. From customer order to delivery, in nine steps',wide:true,doc:true},
+  {src:'img/pc-output-chart.jpg',cap:'Figure 2. Normal vs peak output and orders (owner estimates)',wide:true,doc:true},
+  {src:'img/pc-cobb-douglas.jpg',cap:'Cobb–Douglas mapping: Q, L, K and A applied to the business',wide:true,doc:true},
+  {src:'img/pc-infographic.jpg',cap:'One-page business process infographic',wide:true,doc:true}],
+ links:[{label:'Read the report (PDF)',url:'files/Production_Economics_Field_Study_PC_Jain.pdf'},{label:'GitHub repo',url:'https://github.com/YOUR-GITHUB/production-economics-pc-jain'}],
+ embed:'files/Production_Economics_Field_Study_PC_Jain.pdf#view=FitH',embedTitle:'Read the full report'},
+{num:'02',kicker:'Field study · Consumer journey',illus:'journey',title:'Mapping the<br><em>consumer journey</em>',
+ summary:'How a student finds, joins, experiences and recommends Foundation Institute, a neighbourhood tuition centre in Sector 10A, Gurugram, mapped across seven stages from awareness to advocacy.',
+ tags:['Journey map','Persona','Qualitative research','Action plan'],
+ role:'Author · field study',period:'',tools:['Field observation','1 owner interview','2 student interviews','Photographs'],
+ overview:'Foundation Institute teaches all subjects for Classes III–XII with 8 teachers and roughly 80–90 students, and has run for about 13–14 years. Using observation, an owner interview and two student interviews, this study asks why students choose, stay with and recommend the centre, and what small changes would strengthen the experience.',
+ callout:'The centre is already strong where it matters most. The opportunity is to make the path into the centre more systematic and to remove small service irritants.',
+ findings:[{v:'13–14+',l:'years in operation'},{v:'8',l:'teachers for ~80–90 students'},{v:'~12',l:'average batch size'},{v:'7',l:'journey stages, from awareness to advocacy'},
+  'The value is not “tuition”. It is experienced teaching, individual attention and doubt solving, and academic improvement is also why students stay.',
+  'The experience stage is already strong: high participation, a clean and organised classroom, and both interviewed students would recommend the centre.',
+  'The weak points sit at the edges of the journey: enrolment is informal, there is no referral system, and small irritants like Sunday classes, an occasional AC problem and board updates add friction.',
+  'The owner names skilled teachers, space and local outreach as the main business constraints.'],
+ steps:['Observed the centre, the classroom and student behaviour','Interviewed the owner, then two current students, with a structured guide','Built a persona, “The Academic Improver”, a Class 10 student who joins to improve marks','Mapped seven journey stages and rated each as strong, mixed or an opportunity','Turned five pain points into actions and a day-by-day one-week plan, with measures to track what worked'],
+ limits:['Small sample of one owner and two students, so the findings are qualitative and not representative','Current students only. Former students and parents were not interviewed, so friction may be understated','The reason behind the Sunday-class complaint was not explored. Next step: interview former students and parents'],
+ photos:[{src:'img/fi-field-visit.jpg',cap:'Field visit at Foundation Institute',wide:true},
+  {src:'img/fi-journey-map.jpg',cap:'Customer journey map: seven stages, rated strong, mixed or opportunity',wide:true,doc:true},
+  {src:'img/fi-journey-detail.jpg',cap:'Journey detail: action, what works, customer thought and opportunity at each stage',wide:true,doc:true}],
+ links:[{label:'Read the report (PDF)',url:'files/Consumer_Journey_Foundation_Institute.pdf'},{label:'GitHub repo',url:'https://github.com/YOUR-GITHUB/consumer-journey-foundation-institute'}],
+ embed:'files/Consumer_Journey_Foundation_Institute.pdf#view=FitH',embedTitle:'Read the full report'}
+];
+const MORE=[];
+/* ===================================================================== */
+
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const letters=el=>{el.innerHTML=[...el.textContent].map(c=>`<span class="m"><span class="c">${c}</span></span>`).join('')};
 $$('#name .l,#ct .l').forEach(letters);
@@ -229,7 +482,7 @@ const cur=$('#cur');
 if(matchMedia('(hover:hover) and (pointer:fine)').matches){
  const qx=gsap.quickTo(cur,'x',{duration:.4,ease:'power3'}),qy=gsap.quickTo(cur,'y',{duration:.4,ease:'power3'});
  addEventListener('mousemove',e=>{qx(e.clientX);qy(e.clientY)});
- $$('a,button,input').forEach(e=>{e.addEventListener('mouseenter',()=>cur.classList.add('big'));e.addEventListener('mouseleave',()=>cur.classList.remove('big'))});
+ document.addEventListener('mouseover',e=>cur.classList.toggle('big',!!e.target.closest('a,button,input,[data-lb],[data-tog]')));
 }else cur.remove();
 
 /* hero curve */
@@ -237,29 +490,53 @@ const cp=$('#cp'),cd=$('#cd'),L=cp.getTotalLength(),start=L*.62;
 const dot=off=>{const q=cp.getPointAtLength(L-off);cd.setAttribute('cx',q.x);cd.setAttribute('cy',q.y)};
 gsap.set(cp,{strokeDasharray:L,strokeDashoffset:L});
 
-/* intro */
-const cnt={v:0};
-gsap.set('.hw .eyebrow,.sub,.scroll,.top',{opacity:0,y:20});
+/* intro: loading card -> click to enter */
+const cnt={v:0};let entered=false,ready=false;
+document.documentElement.style.overflow='hidden';lenis&&lenis.stop();
+gsap.set('.hw .eyebrow,.sub,.scroll,.hstat,.top',{opacity:0,y:20});
 gsap.set('#name .c',{yPercent:115});
-const intro=gsap.timeline();
-intro.to(cnt,{v:100,duration:1.5,ease:'power2.inOut',onUpdate:()=>$('#cnt').textContent=Math.round(cnt.v)})
- .to('#load',{yPercent:-100,duration:1,ease:'power4.inOut'})
- .to('#name .c',{yPercent:0,duration:1.2,stagger:.06,ease:'power4.out'},'-=.35')
- .to('.hw .eyebrow,.sub,.scroll,.top',{opacity:1,y:0,duration:.9,stagger:.1,ease:'power3.out'},'-=.8')
- .to(cp,{strokeDashoffset:start,duration:2,ease:'power2.inOut',onUpdate:()=>dot(parseFloat(cp.style.strokeDashoffset)||start)},'-=1.4')
- .set('#load',{display:'none'});
+gsap.set('#stage',{autoAlpha:0});
+const cpic=$('#cardpic');cpic.onerror=()=>cpic.remove();cpic.src=PROFILE.photo;
+const tilt=$('.tilt'),face=$('.face');let tx=0,ty=0,cx2=0,cy2=0;
+addEventListener('pointermove',e=>{if(entered)return;tx=(e.clientX/innerWidth-.5)*40;ty=-(e.clientY/innerHeight-.5)*30;face.style.setProperty('--sx',e.clientX/innerWidth*100+'%');face.style.setProperty('--sy',e.clientY/innerHeight*100+'%')});
+gsap.ticker.add(()=>{cx2+=(tx-cx2)*.08;cy2+=(ty-cy2)*.08;tilt.style.transform=`rotateY(${cx2}deg) rotateX(${cy2}deg)`});
+gsap.timeline()
+ .to(cnt,{v:100,duration:1.4,ease:'power2.inOut',onUpdate:()=>{$('#cnt').textContent=Math.round(cnt.v)}})
+ .to('.ld',{autoAlpha:0,duration:.4})
+ .set('#stage',{autoAlpha:1})
+ .fromTo('#card3d',{y:-320,rotateX:-40,opacity:0},{y:0,rotateX:0,opacity:1,duration:1.8,ease:'elastic.out(1,.5)',onComplete:()=>{ready=true}})
+ .from('#enter',{opacity:0,y:20,duration:.7},'-=1');
+function enter(){if(entered||!ready)return;entered=true;
+ gsap.timeline()
+  .to('#card3d',{scale:1.2,rotateY:360,duration:1,ease:'power3.inOut'})
+  .to('#stage',{autoAlpha:0,y:-70,duration:.5},'-=.35')
+  .to('#intro',{yPercent:-100,duration:1.1,ease:'power4.inOut'},'-=.15')
+  .add(()=>{document.documentElement.style.overflow='';lenis&&lenis.start();ScrollTrigger.refresh()})
+  .to('#name .c',{yPercent:0,duration:1.2,stagger:.06,ease:'power4.out'},'-=.6')
+  .to('.hw .eyebrow,.sub,.scroll,.hstat,.top',{opacity:1,y:0,duration:.9,stagger:.1,ease:'power3.out'},'-=.8')
+  .to(cp,{strokeDashoffset:start,duration:2,ease:'power2.inOut',onUpdate:()=>dot(parseFloat(cp.style.strokeDashoffset)||start)},'-=1.4')
+  .set('#intro',{display:'none'})}
+$('#intro').addEventListener('click',enter);
+addEventListener('keydown',e=>{if(e.key==='Enter')enter()});
 
 /* hero: pinned, name shrinks, curve completes */
 const hs=gsap.timeline({scrollTrigger:{trigger:'#hero',start:'top top',end:'+=110%',scrub:.7,pin:true,anticipatePin:1}});
-hs.to('#name',{scale:.5,yPercent:-26,ease:'none'},0)
+hs.to('#name',{scale:.6,yPercent:-22,ease:'none'},0)
   .to('.hw .eyebrow,.sub,.scroll',{opacity:0,ease:'none'},0)
   .fromTo(cp,{strokeDashoffset:start},{strokeDashoffset:0,ease:'none',immediateRender:false,onUpdate:()=>dot(parseFloat(cp.style.strokeDashoffset)||0)},0);
 
 /* manifesto: words light up with scroll */
 const mn=$('#mani');mn.innerHTML=mn.textContent.trim().split(/\s+/).map(w=>`<span class="w">${w}</span>`).join(' ');
 gsap.fromTo('#mani .w',{opacity:.12},{opacity:1,stagger:.12,ease:'none',scrollTrigger:{trigger:'#mani',start:'top 80%',end:'bottom 55%',scrub:true}});
-gsap.from('.fact',{y:40,opacity:0,stagger:.15,duration:1,ease:'power3.out',scrollTrigger:{trigger:'.facts',start:'top 85%'}});
-gsap.from('.fact i',{scaleX:0,duration:1.3,stagger:.15,ease:'power3.inOut',scrollTrigger:{trigger:'.facts',start:'top 85%'}});
+const pic=$('#pic');pic.onerror=()=>{pic.remove();$('.ph').classList.add('empty')};pic.src=PROFILE.photo;
+$('#loc').textContent=PROFILE.location;
+PROFILE.resume?$('#cv').href=PROFILE.resume:$('#cv').remove();
+gsap.fromTo('.ph',{clipPath:'inset(100% 0% 0% 0%)'},{clipPath:'inset(0% 0% 0% 0%)',duration:1.4,ease:'power4.inOut',scrollTrigger:{trigger:'.me',start:'top 75%'}});
+gsap.fromTo('.ph img',{scale:1.35},{scale:1,ease:'none',scrollTrigger:{trigger:'.me',start:'top 85%',end:'bottom 30%',scrub:true}});
+gsap.from('.ph2',{y:70,opacity:0,rotate:10,duration:1.3,ease:'power3.out',scrollTrigger:{trigger:'.me',start:'top 65%'}});
+gsap.from('.fa',{y:40,opacity:0,stagger:.14,duration:1,ease:'power3.out',scrollTrigger:{trigger:'.me',start:'top 75%'}});
+gsap.from('.fa i',{scaleX:0,duration:1.3,stagger:.14,ease:'power3.inOut',scrollTrigger:{trigger:'.me',start:'top 75%'}});
+gsap.from('.btn',{opacity:0,y:20,duration:.9,delay:.5,scrollTrigger:{trigger:'.me',start:'top 70%'}});
 
 /* marquee driven by scroll velocity */
 const rows=$$('.mq .row');let vel=0;
@@ -269,35 +546,80 @@ gsap.ticker.add(()=>{const v=gsap.utils.clamp(-40,40,vel/60);vel*=.9;
  rows.forEach(r=>{const d=+r.dataset.d,h=r.scrollWidth/2;r._x+=d*(.8+Math.abs(v)*.12)*(v<0?-1:1)*(Math.abs(v)>.5?1:1);
   if(r._x<=-h)r._x+=h;if(r._x>0)r._x-=h;r.style.transform=`translate3d(${r._x}px,0,0) skewX(${-v*.12}deg)`})});
 
-/* journey: pinned horizontal scroll */
-const tr=$('.track'),dist=()=>tr.scrollWidth-innerWidth;
-const ht=gsap.to(tr,{x:()=>-dist(),ease:'none',scrollTrigger:{trigger:'#journey',start:'top top',end:()=>'+='+dist(),pin:true,scrub:1,invalidateOnRefresh:true,onUpdate:s=>$('.jbar i').style.transform=`scaleX(${s.progress})`}});
-$$('.pn').forEach(p=>gsap.from(p.children,{y:50,opacity:0,stagger:.1,duration:.9,ease:'power3.out',scrollTrigger:{trigger:p,containerAnimation:ht,start:'left 85%',toggleActions:'play none none reverse'}}));
+/* journey: pinned vertical timeline with odometer */
+$('#od1').innerHTML=$('#od2').innerHTML=[...'0123456789'].map(d=>`<span>${d}</span>`).join('');
+const je=$$('.je'),JN=je.length;let ji=-1;
+function setJ(i){if(i===ji)return;ji=i;je.forEach((e,k)=>e.classList.toggle('on',k===i));$('#od1').style.transform='translateY(0)';$('#od2').style.transform=`translateY(-${(i+1)*10}%)`}
+setJ(0);
+ScrollTrigger.create({trigger:'#journey',start:'top top',end:'+=320%',pin:true,onUpdate:s=>{setJ(Math.min(JN-1,Math.floor(s.progress*JN)));$('.jbar i').style.transform=`scaleX(${s.progress})`}});
 
 /* work: stacking cards with generated visuals */
-const rng=a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
-const VIS={
- bars(r){let h='';for(let i=0;i<9;i++){const v=40+r()*70+i*9;h+=`<rect class="bar" x="${22+i*30}" y="${200-v}" width="20" height="${v}" rx="3" fill="#0b6b4f" opacity="${.3+i*.08}"/>`}
-  return h+'<path class="ln" d="M32 150 C70 135 100 142 142 112 S205 92 252 62 S285 48 296 40"/>'},
- area(){return '<path class="ar" d="M10 195 V135 C60 118 110 150 160 108 S250 88 292 66 V195Z" fill="#0b6b4f" opacity=".28"/><path class="ar" d="M10 195 V160 C70 150 120 170 170 140 S250 126 292 110 V195Z" fill="#0b6b4f" opacity=".5"/><path class="ar" d="M10 195 V182 C80 176 140 188 200 170 S270 162 292 156 V195Z" fill="#111512" opacity=".85"/><path class="ln" d="M10 135 C60 118 110 150 160 108 S250 88 292 66"/>'},
- scatter(r){let h='',d='M';for(let i=0;i<26;i++){const x=16+i*10.6,u=i/25,y=190-150*Math.pow(u+.02,.6);h+=`<circle class="dot" cx="${x}" cy="${y+(r()-.5)*34}" r="4" fill="#0b6b4f" opacity=".75"/>`;d+=`${x} ${y} L`}
-  return h+`<path class="ln" d="${d.slice(0,-2)}"/>`},
- qr(r){let h='';for(let y=0;y<9;y++)for(let x=0;x<9;x++){const F=(x<3||x>5)&&(y<3||y>5)&&!(x>5&&y>5),fx=x<3?x:x-6,fy=y<3?y:y-6;
-  const on=F?(fx===0||fx===2||fy===0||fy===2||(fx===1&&fy===1)):r()>.5;if(on)h+=`<rect class="q" x="${69+x*18}" y="${29+y*18}" width="15" height="15" rx="3" fill="#111512"/>`}return h},
- ballot(){let h='';for(let i=0;i<4;i++){const y=34+i*42;h+=`<rect x="36" y="${y}" width="26" height="26" rx="7" fill="none" stroke="#111512" stroke-width="2"/><rect class="bl" x="80" y="${y+9}" width="${200-i*34}" height="8" rx="4" fill="#111512" opacity=".25"/>`}
-  return h+'<path class="ln" d="M42 60 L48 67 L58 52" stroke="#0b6b4f"/>'}
+/* build project cards from PROJECTS */
+const esc=t=>String(t).replace(/"/g,'&quot;');
+if(!MORE.length)$('#more').parentNode.remove();else $('#more').innerHTML=MORE.map(m=>m.url?`<a href="${esc(m.url)}" target="_blank" rel="noopener"><b style="font-weight:400">${m.title}</b><span>${m.tag} ↗</span></a>`:`<div><b style="font-weight:400">${m.title}</b><span>${m.tag}</span></div>`).join('');
+/* finance illustrations */
+const ILL={
+chart:'<rect class="fl2" x="20" y="100" width="18" height="38" rx="3"/><rect class="fl2" x="46" y="82" width="18" height="56" rx="3"/><rect class="fl" x="72" y="62" width="18" height="76" rx="3"/><path class="il" d="M12 142H112"/><circle class="il pf" cx="108" cy="54" r="28"/><path class="il" d="M128 74L150 98"/><path class="il" d="M92 62l9-9 8 8 12-14"/>',
+bank:'<path class="il" d="M18 64L80 26l62 38z"/><path class="il" d="M28 70h104"/><rect class="fl2" x="34" y="78" width="14" height="44"/><rect class="fl2" x="58" y="78" width="14" height="44"/><rect class="fl2" x="88" y="78" width="14" height="44"/><rect class="fl2" x="112" y="78" width="14" height="44"/><path class="il" d="M24 128h112M14 142h132"/><circle class="il fl" cx="80" cy="50" r="6"/>',
+factory:'<path class="il" d="M18 134V84l32 20V84l32 20V84l32 20V52h24v82z"/><rect class="fl2" x="30" y="112" width="12" height="12"/><rect class="fl2" x="62" y="112" width="12" height="12"/><rect class="fl2" x="94" y="112" width="12" height="12"/><circle class="il" cx="124" cy="34" r="6"/><circle class="il" cx="136" cy="18" r="4"/><path class="il" d="M10 138h140"/>',
+phone:'<rect class="il" x="46" y="14" width="68" height="132" rx="14"/><path class="il" d="M72 24h16"/><rect class="fl" x="58" y="48" width="12" height="12"/><rect class="fl" x="90" y="48" width="12" height="12"/><rect class="fl" x="58" y="80" width="12" height="12"/><rect class="fl2" x="74" y="64" width="12" height="12"/><rect class="fl" x="90" y="96" width="12" height="12"/><rect class="fl2" x="74" y="96" width="12" height="12"/><path class="il" d="M68 126l8 8 16-18"/>',
+ballot:'<rect class="il" x="26" y="76" width="108" height="64" rx="8"/><path class="il" d="M52 76h56"/><rect class="il pf" x="52" y="26" width="56" height="52" rx="4"/><path class="il" d="M66 52l8 9 16-20" style="stroke:#4bd6a4"/>',
+coins:'<path class="il fl2" d="M26 122v12c0 7 16 12 36 12s36-5 36-12v-12z"/><ellipse class="il pf" cx="62" cy="122" rx="36" ry="12"/><path class="il fl2" d="M26 102v12c0 7 16 12 36 12s36-5 36-12v-12z"/><ellipse class="il pf" cx="62" cy="102" rx="36" ry="12"/><circle class="il fl" cx="112" cy="54" r="26"/><path class="il" d="M102 44h18M102 52h18M103 44c14 0 14 16 0 16l14 14" style="stroke:#1a1818"/>',
+trend:'<path class="il" d="M18 18v124h128"/><path class="il" d="M30 118l30-28 22 14 34-48 24 10"/><path class="il" d="M120 46l14 2-4 14"/><circle class="fl" cx="82" cy="104" r="4"/>',
+calc:'<rect class="il" x="36" y="16" width="88" height="128" rx="12"/><rect class="il fl2" x="48" y="30" width="64" height="26" rx="5"/>'+Array.from({length:9},(_,i)=>`<circle class="il" cx="${56+i%3*24}" cy="${78+Math.floor(i/3)*20}" r="5"/>`).join(''),
+journey:'<path class="il" d="M16 124C44 124 40 76 74 76S104 120 128 108 150 60 144 40"/><circle class="fl" cx="16" cy="124" r="7"/><circle class="fl2 il" cx="74" cy="76" r="7"/><circle class="fl2 il" cx="128" cy="108" r="7"/><path class="il" d="M144 40V16l22 8-22 8"/><path class="il" d="M10 140h140"/>',
+pie:'<circle class="il" cx="80" cy="82" r="50"/><path class="fl" d="M80 82V32A50 50 0 0 1 126 102z"/><path class="il" d="M80 82V32M80 82l46 20M80 82L40 112"/>'
 };
-$$('.vp').forEach((v,i)=>{v.innerHTML=`<svg viewBox="0 0 300 220">${VIS[v.dataset.v](rng(i+7))}</svg>`});
-const play=c=>{const s=c.querySelector('svg');
- s.querySelectorAll('.ln').forEach(p=>{const l=p.getTotalLength();gsap.fromTo(p,{strokeDasharray:l,strokeDashoffset:l},{strokeDashoffset:0,duration:1.5,ease:'power2.inOut',delay:.25})});
- gsap.from(s.querySelectorAll('.bar,.ar'),{scaleY:0,transformOrigin:'50% 100%',duration:1,stagger:.07,ease:'power3.out'});
- gsap.from(s.querySelectorAll('.q,.dot'),{scale:0,opacity:0,duration:.6,stagger:{each:.012,from:'random'},ease:'back.out(2)'});
- gsap.from(s.querySelectorAll('.bl'),{scaleX:0,transformOrigin:'0 50%',duration:.9,stagger:.12,ease:'power3.out'})};
-const cards=$$('.pc');
-cards.forEach((c,i)=>{c.style.top=`calc(11vh + ${i*16}px)`;
- ScrollTrigger.create({trigger:c,start:'top 72%',once:true,onEnter:()=>play(c)});
- if(i<cards.length-1)gsap.to(c,{scale:.93,filter:'brightness(.92)',ease:'none',scrollTrigger:{trigger:cards[i+1],start:'top 80%',end:'top 18%',scrub:true}})});
-gsap.from('.wh h2',{y:60,opacity:0,duration:1.1,ease:'power3.out',scrollTrigger:{trigger:'.wh',start:'top 85%'}});
+const ill=k=>`<svg class="ill" viewBox="0 0 160 160" aria-hidden="true">${ILL[k]}</svg>`;
+const VMAP={bars:'chart',area:'bank',scatter:'factory',qr:'phone',ballot:'ballot'};
+const drawIl=root=>root&&root.querySelectorAll('.il').forEach(p=>{try{const l=p.getTotalLength();gsap.fromTo(p,{strokeDasharray:l,strokeDashoffset:l},{strokeDashoffset:0,duration:1.4,ease:'power2.inOut',delay:.15,onComplete:()=>{p.style.strokeDasharray='none'}})}catch(e){}});
+const deco=(host,k,cls)=>{if(!host)return;const d=document.createElement('div');d.className='deco '+cls;d.innerHTML=ill(k);host.appendChild(d);ScrollTrigger.create({trigger:d,start:'top 92%',once:true,onEnter:()=>drawIl(d)})};
+deco($('.phw'),'coins','d1');deco($('.dh'),'trend','d2');deco($('.lh'),'calc','d3');
+
+/* case-study view */
+const pm=$('#pm'),pmc=$('#pmc'),lb=$('#lb'),lbi=$('#lb img'),lbp=$('#lb p');let curP=0,io2=null;
+function count(el){const m=el.textContent.match(/^(\D*)([\d.,]+)(.*)$/);if(!m)return;const raw=m[2].replace(/,/g,''),dec=(raw.split('.')[1]||'').length,end=parseFloat(raw);if(isNaN(end))return;const o={v:0};gsap.to(o,{v:end,duration:1.6,ease:'power2.out',onUpdate:()=>{el.textContent=m[1]+o.v.toFixed(dec)+m[3]}})}
+function openP(i){curP=i;const p=PROJECTS[i],n=PROJECTS[(i+1)%PROJECTS.length],ls=p.links.filter(l=>l.url),il=p.illus||VMAP[p.vis]||'coins';
+ const fs=p.findings||[],cards=fs.filter(f=>typeof f==='object'),txt=fs.filter(f=>typeof f==='string');
+ const meta=[['Role',p.role],['Period',p.period],['Tools',(p.tools||[]).join(' · ')]].filter(m=>m[1]);
+ const S=(t,b)=>b?`<div class="csec"><h3 class="serif cs-a">${t}</h3>${b}</div>`:'';
+ const ph=(p.photos&&p.photos.length)?p.photos.map(x=>`<figure class="cs-a ${x.wide?'wide':''} ${x.doc?'doc':''} ${x.tall?'tall':''}" data-lb="${esc(x.src)}" data-cap="${esc(x.cap||'')}"><img src="${esc(x.src)}" alt="${esc(x.cap||'Project proof')}" loading="lazy"><figcaption>${x.cap||''}</figcaption></figure>`).join(''):['coins','chart','calc'].map(k=>`<figure class="cs-a empty">${ill(k)}<figcaption>Proof image</figcaption></figure>`).join('');
+ pmc.innerHTML=`<div class="cs-bar"><button data-close>← All projects</button><span class="mono">${p.num} / ${String(PROJECTS.length).padStart(2,'0')}</span><div><button data-nav="-1">Prev</button><button data-nav="1">Next</button></div></div>
+<div class="cs"><div class="cs-hero"><div><span class="mono cs-a">${p.num} — ${p.kicker}</span><h2 class="cs-a">${p.title}</h2><p class="lead2 cs-a">${p.summary}</p><div class="tags cs-a">${p.tags.map(t=>`<span>${t}</span>`).join('')}</div><div class="by cs-a"><img src="${esc(PROFILE.photo)}" alt="" onerror="this.style.display='none'"><div><b>${PROFILE.name}</b><span class="mono">Author${p.role?' · '+p.role:''}</span></div></div></div><div class="cs-il cs-a">${ill(il)}</div></div>
+${meta.length?`<div class="cs-meta cs-a">${meta.map(m=>`<div><span class="mono">${m[0]}</span>${m[1]}</div>`).join('')}</div>`:''}
+${p.callout?`<div class="callout cs-a"><span class="mono">Bottom line</span><p>${p.callout}</p></div>`:''}
+${S('Overview',p.overview?`<p class="ov cs-a">${p.overview}</p>`:'')}
+${S('Key findings',(cards.length?`<div class="sg">${cards.map(c=>`<div class="sc cs-a"><b>${c.v}</b><span>${c.l}</span></div>`).join('')}</div>`:'')+(txt.length?`<ul class="fl-list">${txt.map(x=>`<li class="cs-a">${x}</li>`).join('')}</ul>`:''))}
+${S('How it works',p.steps&&p.steps.length?`<ol class="steps">${p.steps.map(x=>`<li class="cs-a">${x}</li>`).join('')}</ol>`:'')}
+${S('Limits of the study',p.limits&&p.limits.length?`<ul class="fl-list">${p.limits.map(x=>`<li class="cs-a">${x}</li>`).join('')}</ul>`:'')}
+${S('Proof &amp; screenshots',`<div class="gal">${ph}</div>`)}
+${S('See it working',ls.length?`<div class="lbs cs-a">${ls.map(l=>`<a class="lb" href="${esc(l.url)}" target="_blank" rel="noopener">${l.label} <span>↗</span></a>`).join('')}</div>`:'')}
+${p.embed?S(p.embedTitle||'Live preview',`<div class="emb cs-a"><iframe src="${esc(p.embed)}" loading="lazy" title="Preview"></iframe></div>`):''}
+<button class="nx cs-a" data-nav="1"><span class="mono">Next project</span><span class="serif">${n.title.replace(/<br>/g,' ').replace(/<\/?em>/g,'')}</span></button></div>`;
+ pmc.scrollTop=0;
+ if(io2)io2.disconnect();
+ io2=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const el=e.target;el.style.transitionDelay=(el._i%4)*.07+'s';el.classList.add('in');if(el.classList.contains('sc'))count(el.querySelector('b'));io2.unobserve(el)}),{root:pmc,threshold:.1});
+ pmc.querySelectorAll('.cs-a').forEach((el,k)=>{el._i=k;io2.observe(el)});
+ pm.classList.add('open');document.documentElement.style.overflow='hidden';lenis&&lenis.stop();
+ history.replaceState(null,'','#case-'+(i+1));
+ setTimeout(()=>drawIl(pmc.querySelector('.cs-il')),550)}
+function closeP(){pm.classList.remove('open');lb.classList.remove('open');document.documentElement.style.overflow='';lenis&&lenis.start();history.replaceState(null,'',location.pathname+location.search)}
+document.addEventListener('click',e=>{const t=e.target;let b=t.closest('[data-open]');if(b)return openP(+b.dataset.open);
+ if(t.closest('[data-close]')||t===pm)return closeP();
+ b=t.closest('[data-nav]');if(b)return openP((curP+ +b.dataset.nav+PROJECTS.length)%PROJECTS.length);
+ b=t.closest('[data-lb]');if(b){lbi.src=b.dataset.lb;lbp.textContent=b.dataset.cap||'';lb.classList.add('open');return}
+ if(t.closest('#lb'))lb.classList.remove('open')});
+addEventListener('keydown',e=>{if(e.key==='Escape')lb.classList.contains('open')?lb.classList.remove('open'):closeP()});
+const hm=location.hash.match(/^#case-(\d+)/);if(hm&&PROJECTS[+hm[1]-1])setTimeout(()=>openP(+hm[1]-1),2600);
+
+/* doors wall: pinned horizontal scroll, door opens when centred */
+$('#wall').innerHTML=PROJECTS.map((p,i)=>{const il=p.illus||VMAP[p.vis]||'coins',tl=p.title.replace(/<br>/g,' ').replace(/<\/?em>/g,'');
+ return `<div class="door" data-i="${i}"><div class="frame"><div class="room"><div class="rin">${ill(il)}<span class="mono">${p.num} — ${p.kicker}</span><h3>${p.title}</h3><p>${p.summary}</p><button class="go" data-open="${i}">Open case study +</button></div></div><div class="leaf" data-tog><span class="dn">${p.num}</span><i class="pnl" style="top:10%;height:30%"></i><i class="pnl" style="top:46%;height:34%"></i><i class="hdl"></i><span class="dl serif">${tl}</span></div></div></div>`}).join('')+`<div class="door lock"><div class="frame"><div class="leaf"><span class="dn">+</span><i class="pnl" style="top:10%;height:30%"></i><i class="pnl" style="top:46%;height:34%"></i><i class="hdl"></i><span class="lk2">Next case study<br>in progress</span></div></div></div>`;
+const wall=$('#wall'),wd=()=>wall.scrollWidth-innerWidth;
+const wt=gsap.to(wall,{x:()=>-wd(),ease:'none',scrollTrigger:{trigger:'.wpin',start:'top top',end:()=>'+='+wd(),pin:true,scrub:1,invalidateOnRefresh:true}});
+$$('.door:not(.lock)').forEach(d=>ScrollTrigger.create({trigger:d,containerAnimation:wt,start:'center 62%',end:'center 38%',toggleClass:{targets:d,className:'open'}}));
+document.addEventListener('click',e=>{const t=e.target.closest('[data-tog]');if(t)t.closest('.door').classList.toggle('open')});
+gsap.from('.dh',{y:40,opacity:0,duration:1,scrollTrigger:{trigger:'.wpin',start:'top 80%'}});
 
 /* valuation lab */
 function dcf(){const g=+$('#gr').value/100,w=+$('#wc').value/100,t=+$('#tg').value/100;
@@ -317,6 +639,16 @@ gsap.from('.mail,.foot',{opacity:0,y:30,duration:1,delay:.4,stagger:.15,scrollTr
 if(matchMedia('(hover:hover)').matches){const m=$('.mail'),mx=gsap.quickTo(m,'x',{duration:.4}),my=gsap.quickTo(m,'y',{duration:.4});
  m.addEventListener('mousemove',e=>{const r=m.getBoundingClientRect();mx((e.clientX-r.left-r.width/2)*.12);my((e.clientY-r.top-r.height/2)*.3)});
  m.addEventListener('mouseleave',()=>{mx(0);my(0)})}
+
+/* clock + menu */
+const fmt=new Intl.DateTimeFormat('en-IN',{hour:'numeric',minute:'2-digit',timeZone:'Asia/Kolkata',hour12:true});
+const tickC=()=>{const t=fmt.format(new Date());['#clk','#clk2','#clk3'].forEach(q=>{const e=$(q);if(e)e.textContent=t})};tickC();setInterval(tickC,20000);
+const menu=$('#menu'),mb=$('#menuBtn');let mo=false;
+function menuT(o){mo=o;menu.classList.toggle('open',o);mb.textContent=o?'Close':'Menu';
+ if(o){lenis&&lenis.stop();gsap.fromTo('#menu nav a span',{yPercent:110,opacity:0},{yPercent:0,opacity:1,stagger:.06,duration:.9,ease:'power4.out',delay:.3})}else{lenis&&lenis.start()}}
+mb.onclick=()=>menuT(!mo);
+$$('#menu nav a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();menuT(false);setTimeout(()=>{const t=$(a.getAttribute('href'));lenis?lenis.scrollTo(t,{duration:2}):t.scrollIntoView({behavior:'smooth'})},60)}));
+addEventListener('keydown',e=>{if(e.key==='Escape'&&mo)menuT(false)});
 
 /* background colour shifts + section index */
 const ci=$('#ci');let cur_i='01';
